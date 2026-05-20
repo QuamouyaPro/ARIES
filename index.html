@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARIES — Analyse et Renseignement de l'Intelligence Économique et Stratégique</title>
+<meta name="description" content="Plateforme premium d'intelligence territoriale française. Rapports stratégiques sur l'implantation, le foncier, la gouvernance locale et les synergies économiques." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface-1: #111111;
+    --surface-2: #1a1a1a;
+    --ink: #f5f5f3;
+    --ink-soft: #9a9a9a;
+    --ink-mute: #6a6a6a;
+    --accent: #2563eb;
+    --line: rgba(255, 255, 255, 0.07);
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 15px;
+    overflow-x: hidden;
+  }
+
+  /* Scrollbar bleue, 3px */
+  ::-webkit-scrollbar { width: 3px; height: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); }
+  html { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+
+  /* Subtle radial behind hero only */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 55% 60% at 50% 35%, rgba(37, 99, 235, 0.10), transparent 70%);
+    z-index: 0;
+  }
+
+  /* WebGL shader canvas */
+  #particles-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+  }
+
+  main, header, footer { position: relative; z-index: 2; }
+
+  /* TYPOGRAPHY */
+  h1, h2, h3, h4 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    line-height: 1.05;
+    margin: 0;
+    color: var(--ink);
+  }
+  em, i, .italic {
+    font-style: italic;
+  }
+  p { margin: 0; color: var(--ink-soft); }
+  a { color: inherit; text-decoration: none; }
+
+  /* Eyebrow */
+  .eyebrow {
+    display: inline-block;
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* LAYOUT */
+  .container {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section { padding: 140px 0; position: relative; }
+
+  /* BUTTONS — square corners, no radius */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: all 400ms var(--ease);
+    border: 1px solid transparent;
+    border-radius: 0;
+    line-height: 1;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #1d4fd1;
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--ink-soft);
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  .btn .arrow {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    transition: transform 400ms var(--ease);
+  }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    padding: 18px 0;
+    background: rgba(10, 10, 10, 0.65);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 400ms var(--ease), background 400ms var(--ease);
+  }
+  .nav.scrolled {
+    background: rgba(10, 10, 10, 0.82);
+    border-bottom-color: var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    color: var(--ink);
+  }
+  .brand-mark {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.32em;
+  }
+  .brand-tag {
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--ink-soft);
+    font-size: 13px;
+    transition: color 300ms var(--ease);
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    padding: 10px 18px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: all 400ms var(--ease);
+  }
+  .nav-cta:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100dvh;
+    padding-top: 200px;
+    padding-bottom: 120px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 80px;
+    align-items: end;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-eyebrow { margin-bottom: 40px; opacity: 0; animation: fadeUp 900ms var(--ease) 100ms forwards; }
+  .hero-name {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(72px, 13vw, 184px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1000ms var(--ease) 200ms forwards;
+  }
+  .hero-name .dot { color: var(--accent); }
+  .hero-acronym {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 32px;
+    line-height: 2;
+    opacity: 0;
+    animation: fadeUp 900ms var(--ease) 320ms forwards;
+  }
+  .hero-acronym strong { color: var(--accent); font-weight: 500; }
+  .hero-headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 400;
+    line-height: 1.2;
+    max-width: 620px;
+    margin-bottom: 48px;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 900ms var(--ease) 440ms forwards;
+  }
+  .hero-headline em {
+    color: var(--ink);
+    font-style: italic;
+  }
+  .hero-headline em::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    margin-left: 8px;
+    vertical-align: top;
+    margin-top: 14px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 900ms var(--ease) 580ms forwards;
+  }
+  .hero-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 900ms var(--ease) 700ms forwards;
+  }
+  .hero-meta-item {
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+  .hero-meta-item:last-child { border-bottom: 1px solid var(--line); }
+  .hero-meta-item .label {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .hero-meta-item .value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEAD */
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 80px;
+    margin-bottom: 96px;
+    align-items: end;
+  }
+  .section-eyebrow-row { margin-bottom: 28px; }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(40px, 5.2vw, 76px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--ink);
+  }
+  .section-lede {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 540px;
+  }
+
+  /* PROBLÈME */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 80px;
+    align-items: start;
+  }
+  .problem-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.25;
+    color: var(--ink);
+    position: relative;
+    padding-left: 32px;
+  }
+  .problem-quote::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: var(--accent);
+  }
+  .problem-quote .accent { color: var(--accent); font-style: italic; }
+  .problem-stats {
+    display: flex;
+    flex-direction: column;
+  }
+  .problem-stat {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 32px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .problem-stat:last-child { border-bottom: 1px solid var(--line); }
+  .problem-stat-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .problem-stat-num .unit {
+    font-size: 20px;
+    color: var(--accent);
+    margin-left: 4px;
+  }
+  .problem-stat-text {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* MODULES — 1px gap on white 7% bg */
+  .modules-shell {
+    background: rgba(255, 255, 255, 0.07);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    border: 1px solid var(--line);
+  }
+  .module {
+    grid-column: span 2;
+    background: var(--bg);
+    padding: 48px 36px 44px;
+    transition: background 400ms var(--ease);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+  .module:nth-child(1),
+  .module:nth-child(2) { grid-column: span 3; }
+  .module:hover { background: var(--surface-2); }
+  .module:hover .module-line { background: var(--accent); width: 48px; }
+
+  .module-line {
+    width: 24px;
+    height: 2px;
+    background: var(--ink-mute);
+    margin-bottom: 28px;
+    transition: all 500ms var(--ease);
+  }
+  .module-num {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .module-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 38px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .module-tagline {
+    font-style: italic;
+    font-family: 'Instrument Serif', serif;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .module-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    max-width: 42ch;
+    flex-grow: 1;
+  }
+  .module-meta {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-mute);
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+
+  /* OFFRES */
+  .offres-shell {
+    background: rgba(255, 255, 255, 0.07);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--line);
+  }
+  .offre {
+    background: var(--bg);
+    padding: 48px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 400ms var(--ease);
+    min-height: 520px;
+  }
+  .offre:hover { background: var(--surface-1); }
+  .offre--featured {
+    background: var(--surface-1);
+    border-top: 2px solid var(--accent);
+  }
+  .offre--featured:hover { background: var(--surface-2); }
+  .offre-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+  }
+  .offre-price {
+    font-family: 'Instrument Serif', serif;
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .offre-price .unit {
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    color: var(--ink-mute);
+    letter-spacing: 0;
+  }
+  .offre-commit {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    margin-bottom: 24px;
+  }
+  .offre-target {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .offre-cta {
+    margin-top: 28px;
+    width: 100%;
+    justify-content: center;
+  }
+  .pricing-note {
+    text-align: center;
+    margin-top: 40px;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-mute);
+  }
+  .offre-kind {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+  }
+  .offre-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .offre-desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .offre-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    flex-grow: 1;
+  }
+  .offre-list li {
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    display: flex;
+    gap: 12px;
+  }
+  .offre-list li:last-child { border-bottom: 1px solid var(--line); }
+  .offre-list li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .offre-foot {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink);
+    padding-top: 4px;
+  }
+  .offre-foot strong {
+    display: block;
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    font-style: normal;
+    margin-bottom: 6px;
+  }
+
+  /* POURQUOI */
+  .pourquoi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 64px;
+  }
+  .argument {
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .argument::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .argument-num {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .argument-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .argument-title em { font-style: italic; }
+  .argument-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* CERTIFICATION */
+  .cert {
+    padding: 100px 0;
+  }
+  .cert-inner {
+    border: 1px solid var(--line);
+    padding: 80px 64px;
+    background: var(--surface-1);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 64px;
+    align-items: center;
+  }
+  .cert-seal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .cert-seal-mark {
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .cert-seal-mark::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+  }
+  .cert-seal-mark::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -8px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: translateY(-50%);
+    border-radius: 999px;
+  }
+  .cert-seal-inner {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: 0.06em;
+  }
+  .cert-seal-inner sup { font-size: 14px; color: var(--accent); margin-left: 2px; }
+  .cert-seal-label {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cert-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 3.4vw, 48px);
+    font-weight: 400;
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+  .cert-title em { font-style: italic; }
+  .cert-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 56ch;
+  }
+  .cert-text em { color: var(--ink); font-style: italic; }
+  .cert-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cert-tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 80px 0 48px;
+    background: var(--bg);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+    margin-bottom: 64px;
+  }
+  .footer-brand {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 64px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .footer-brand .dot { color: var(--accent); font-style: normal; }
+  .footer-acronym {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    line-height: 2;
+    max-width: 420px;
+  }
+  .footer-acronym strong { color: var(--accent); font-weight: 500; }
+  .footer-col h4 {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .footer-col a, .footer-col p {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin-bottom: 12px;
+    transition: color 300ms var(--ease);
+  }
+  .footer-col a:hover { color: var(--ink); }
+  .footer-bottom {
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-bottom p {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    transition-delay: var(--delay, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .hero-grid,
+    .section-head,
+    .problem-grid,
+    .cert-inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .modules-shell { grid-template-columns: repeat(2, 1fr); }
+    .module, .module:nth-child(1), .module:nth-child(2) { grid-column: span 1; }
+    .offres-shell { grid-template-columns: repeat(2, 1fr); }
+    .pourquoi-grid { grid-template-columns: 1fr; gap: 48px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 48px; }
+    section { padding: 100px 0; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .modules-shell { grid-template-columns: 1fr; }
+    .offres-shell { grid-template-columns: 1fr; }
+    .cert-inner { padding: 56px 28px; }
+    .footer-brand { font-size: 44px; }
+    section { padding: 80px 0; }
+    .hero { padding-top: 140px; padding-bottom: 60px; }
+    .module { padding: 36px 28px; min-height: auto; }
+    .offre { padding: 40px 28px; min-height: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    [class*="hero-"] { animation: none !important; opacity: 1 !important; }
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark">A R I E S</span>
+      <span class="brand-tag">Intelligence Territoriale</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#probleme">Constat</a>
+      <a href="#modules">Modules</a>
+      <a href="#pricing">Formules</a>
+      <a href="#certification">Certification</a>
+      <a href="#contact" class="nav-cta">Prendre contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">
+            <span class="eyebrow">Intelligence territoriale française — Édition 2026</span>
+          </div>
+          <h1 class="hero-name">ARIES<span class="dot">.</span></h1>
+          <p class="hero-acronym">
+            <strong>A</strong>nalyse &nbsp;·&nbsp; <strong>R</strong>enseignement &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/>
+            <strong>É</strong>conomique &nbsp;·&nbsp; <strong>S</strong>tratégique
+          </p>
+          <p class="hero-headline">
+            Là où la donnée publique reste muette, ARIES traduit le territoire en <em>décision stratégique</em>
+          </p>
+          <div class="hero-actions">
+            <a href="#modules" class="btn btn-primary">
+              Découvrir la plateforme
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#contact" class="btn btn-secondary">Demander un dossier</a>
+          </div>
+        </div>
+
+        <aside class="hero-meta">
+          <div class="hero-meta-item">
+            <div class="label">Couverture</div>
+            <div class="value">34 967 communes</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="label">Sources publiques agrégées</div>
+            <div class="value">127 flux normalisés</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="label">Mise à jour</div>
+            <div class="value">Cycles trimestriels</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLÈME -->
+  <section id="probleme">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow">01 — Le constat</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;">
+            Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.
+          </h2>
+        </div>
+        <p class="section-lede reveal" style="--delay: 200ms;">
+          La France publie chaque année des milliers de jeux de données sur ses territoires : finances locales, marchés publics, schémas de cohérence, indicateurs INSEE, registres fonciers. Aucun acteur économique ne peut les exploiter dans la durée — l'information existe, mais elle reste inerte.
+        </p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="reveal">
+          <blockquote class="problem-quote">
+            Le décideur économique français travaille à l'aveugle sur des territoires <span class="accent">où tout est pourtant déjà documenté.</span> ARIES restitue le signal.
+          </blockquote>
+        </div>
+
+        <div class="problem-stats reveal" style="--delay: 150ms;">
+          <div class="problem-stat">
+            <div class="problem-stat-num">38<span class="unit">%</span></div>
+            <div class="problem-stat-text">des implantations économiques en France échouent dans les cinq ans, faute d'analyse territoriale en amont.</div>
+          </div>
+          <div class="problem-stat">
+            <div class="problem-stat-num">9<span class="unit">/10</span></div>
+            <div class="problem-stat-text">collectivités ne disposent d'aucun scoring extérieur indépendant de leur trajectoire économique.</div>
+          </div>
+          <div class="problem-stat">
+            <div class="problem-stat-num">2,4<span class="unit">k</span></div>
+            <div class="problem-stat-text">appels à projets publics par an, fragmentés entre 14 plateformes administratives distinctes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section id="modules">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow">02 — La plateforme</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;">
+            Six modules,<br/>une seule <em>lecture du territoire.</em>
+          </h2>
+        </div>
+        <p class="section-lede reveal" style="--delay: 200ms;">
+          Chaque module d'ARIES répond à une question stratégique précise. Les six convergent en un dossier territorial unifié, livré sous format institutionnel — note de synthèse, fiche scoring, cartographie commentée.
+        </p>
+      </div>
+
+      <div class="modules-shell reveal">
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">i — Score</div>
+          <h3 class="module-name">Score</h3>
+          <div class="module-tagline">Notation comparative des territoires</div>
+          <p class="module-desc">
+            Indice propriétaire combinant trajectoire fiscale, dynamisme démographique, tension foncière et solidité de la gouvernance. Comparaison instantanée entre communes, EPCI et bassins d'emploi.
+          </p>
+          <div class="module-meta">— Pour les directions de l'implantation et l'investissement public.</div>
+        </article>
+
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">ii — Insight</div>
+          <h3 class="module-name">Insight</h3>
+          <div class="module-tagline">Notes de synthèse stratégique</div>
+          <p class="module-desc">
+            Rapports rédigés par nos analystes territoriaux : lecture politique, lecture économique, lecture concurrentielle. Format note ministérielle, douze à vingt pages, sourcé et opposable.
+          </p>
+          <div class="module-meta">— Le langage commun des directions générales.</div>
+        </article>
+
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">iii — Land</div>
+          <h3 class="module-name">Land</h3>
+          <div class="module-tagline">Opportunités foncières qualifiées</div>
+          <p class="module-desc">
+            Détection des friches industrielles, zones d'activité sous-occupées, terrains constructibles ouverts à l'investissement, croisée avec les contraintes PLU et environnementales.
+          </p>
+          <div class="module-meta">— Cartographie active, mise à jour trimestrielle.</div>
+        </article>
+
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">iv — Gov</div>
+          <h3 class="module-name">Gov</h3>
+          <div class="module-tagline">Lecture politique des collectivités</div>
+          <p class="module-desc">
+            Profilage des exécutifs locaux, lecture des votes de conseil, identification des alignements de mandature. Comprendre qui décide, comment et dans quelle temporalité.
+          </p>
+          <div class="module-meta">— Réservé aux abonnés Stratégique et au-delà.</div>
+        </article>
+
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">v — Economic</div>
+          <h3 class="module-name">Economic</h3>
+          <div class="module-tagline">Veille des appels à projets</div>
+          <p class="module-desc">
+            Agrégation et qualification des aides publiques, dispositifs France Relance, appels d'offres européens et régionaux. Tri par éligibilité, calendrier, ratio effort/retour.
+          </p>
+          <div class="module-meta">— 2 400 dispositifs suivis en continu.</div>
+        </article>
+
+        <article class="module">
+          <div class="module-line"></div>
+          <div class="module-num">vi — Synergy</div>
+          <h3 class="module-name">Synergy</h3>
+          <div class="module-tagline">Cartographie des écosystèmes</div>
+          <p class="module-desc">
+            Identification des chaînes de valeur locales, des relations donneur d'ordre / sous-traitant, des cluster de compétences. Lecture des synergies entre acteurs privés et opérateurs publics.
+          </p>
+          <div class="module-meta">— L'avantage compétitif rendu visible.</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow">03 — Tarification</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;">
+            Nos <em>formules,</em><br/>du rapport ponctuel à l'institutionnel.
+          </h2>
+        </div>
+        <p class="section-lede reveal" style="--delay: 200ms;">
+          Chaque formule est calibrée pour un usage précis. Aucun crédit, aucune métrique opaque : un périmètre, un volume de rapports, un horizon d'engagement clair.
+        </p>
+      </div>
+
+      <div class="offres-shell reveal">
+        <article class="offre">
+          <div class="offre-kind">Ponctuel</div>
+          <h3 class="offre-name">À la carte</h3>
+          <div class="offre-price">790 €<span class="unit"> / rapport</span></div>
+          <div class="offre-commit">Sans engagement</div>
+          <p class="offre-target">Décideur ponctuel cherchant une analyse territoriale unique, à la demande.</p>
+          <ul class="offre-list">
+            <li>Rapport personnalisé sur commande</li>
+            <li>Livraison sous 48 heures</li>
+            <li>Choix libre du module</li>
+            <li>Sans engagement</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary offre-cta">
+            Commander un rapport
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+
+        <article class="offre">
+          <div class="offre-kind">Basic</div>
+          <h3 class="offre-name">Basic</h3>
+          <div class="offre-price">590 €<span class="unit"> / mois</span></div>
+          <div class="offre-commit">Engagement 12 mois</div>
+          <p class="offre-target">TPE et porteurs de projet suivant un territoire dans la durée.</p>
+          <ul class="offre-list">
+            <li>3 rapports par mois</li>
+            <li>Modules Score &amp; Insight</li>
+            <li>Alertes hebdomadaires</li>
+            <li>Dashboard de suivi</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary offre-cta">
+            Démarrer
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+
+        <article class="offre offre--featured">
+          <div class="offre-badge">Recommandé</div>
+          <div class="offre-kind">Premium</div>
+          <h3 class="offre-name">Premium</h3>
+          <div class="offre-price">1 900 €<span class="unit"> / mois</span></div>
+          <div class="offre-commit">Engagement 12 mois</div>
+          <p class="offre-target">PME, cabinets et investisseurs pilotant un portefeuille de territoires.</p>
+          <ul class="offre-list">
+            <li>12 rapports par mois</li>
+            <li>Tous les modules ARIES</li>
+            <li>Rapports sur commande inclus</li>
+            <li>Synthèses mensuelles &amp; trimestrielles</li>
+            <li>Support prioritaire</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary offre-cta">
+            Démarrer
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+
+        <article class="offre">
+          <div class="offre-kind">Ultra</div>
+          <h3 class="offre-name">Ultra</h3>
+          <div class="offre-price">Sur devis</div>
+          <div class="offre-commit">Plancher 8 000 € / mois</div>
+          <p class="offre-target">Collectivités, fonds et grands groupes opérant à l'échelle nationale.</p>
+          <ul class="offre-list">
+            <li>Rapports illimités</li>
+            <li>Accès API data ARIES</li>
+            <li>Scoring en marque blanche</li>
+            <li>Account manager dédié</li>
+            <li>Missions de conseil incluses</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary offre-cta">
+            Nous contacter
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+      </div>
+
+      <p class="pricing-note reveal">Tarification définitive à venir — positionnement ultra-premium.</p>
+    </div>
+  </section>
+
+  <!-- POURQUOI -->
+  <section id="pourquoi">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow">04 — Différenciation</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;">
+            Pourquoi ARIES,<br/>plutôt qu'<em>une étude de cabinet.</em>
+          </h2>
+        </div>
+        <p class="section-lede reveal" style="--delay: 200ms;">
+          Trois engagements structurels qui nous séparent des prestations classiques de conseil et des outils de data brute.
+        </p>
+      </div>
+
+      <div class="pourquoi-grid">
+        <div class="argument reveal">
+          <div class="argument-num">i — Indépendance</div>
+          <h3 class="argument-title"><em>Indépendance</em> documentée.</h3>
+          <p class="argument-text">
+            ARIES n'accepte aucun mandat de collectivité scorée, aucun contrat de promotion territoriale. Notre matière première — la donnée publique — est traçable ; notre lecture, opposable.
+          </p>
+        </div>
+
+        <div class="argument reveal" style="--delay: 120ms;">
+          <div class="argument-num">ii — Continuité</div>
+          <h3 class="argument-title"><em>Continuité</em> de la donnée.</h3>
+          <p class="argument-text">
+            Là où un cabinet livre une photographie figée, ARIES suit le territoire dans la durée. Chaque rapport s'inscrit dans une trajectoire — utile, comparable, vérifiable trimestre après trimestre.
+          </p>
+        </div>
+
+        <div class="argument reveal" style="--delay: 240ms;">
+          <div class="argument-num">iii — Lecture</div>
+          <h3 class="argument-title">Lecture <em>institutionnelle.</em></h3>
+          <p class="argument-text">
+            Nos livrables adoptent le format des notes ministérielles et préfectorales. Ils circulent sans traduction dans les comités de direction, les conseils d'administration et les cabinets d'exécutifs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATION -->
+  <section id="certification" class="cert">
+    <div class="container">
+      <div class="cert-inner reveal">
+        <div class="cert-seal">
+          <div class="cert-seal-mark">
+            <div class="cert-seal-inner">A<sup>™</sup></div>
+          </div>
+          <div class="cert-seal-label">Certification ARIES · 2026</div>
+        </div>
+        <div>
+          <div class="section-eyebrow-row"><span class="eyebrow">05 — Gage de rigueur</span></div>
+          <h2 class="cert-title">La <em>Certification ARIES™</em> — un standard de méthode.</h2>
+          <p class="cert-text">
+            Chaque rapport publié porte la mention <em>Certifié ARIES</em>. Elle garantit la double validation analytique, la traçabilité intégrale des sources publiques mobilisées, et le respect strict de la charte déontologique du cabinet. C'est notre signature : un livrable défendable devant un préfet, une commission d'enquête, un conseil de surveillance.
+          </p>
+          <div class="cert-tags">
+            <span class="cert-tag">Double signature analyste</span>
+            <span class="cert-tag">Source traçable</span>
+            <span class="cert-tag">Données souveraines</span>
+            <span class="cert-tag">Charte déontologique</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand reveal"><em>ARIES</em><span class="dot">.</span></div>
+        <p class="footer-acronym reveal" style="--delay: 100ms;">
+          <strong>A</strong>nalyse · <strong>R</strong>enseignement · <strong>I</strong>ntelligence<br/>
+          <strong>É</strong>conomique · <strong>S</strong>tratégique
+        </p>
+      </div>
+      <div class="footer-col reveal" style="--delay: 150ms;">
+        <h4>Plateforme</h4>
+        <a href="#modules">Modules</a>
+        <a href="#pricing">Formules</a>
+        <a href="#certification">Certification</a>
+        <a href="#probleme">Méthode</a>
+      </div>
+      <div class="footer-col reveal" style="--delay: 200ms;">
+        <h4>Contact</h4>
+        <p>cabinet@aries-intelligence.fr</p>
+        <p>+33 (0)1 47 03 28 14</p>
+        <p>17 rue de Solférino<br/>75007 Paris</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 ARIES Intelligence Territoriale — Tous droits réservés.</p>
+      <p>Mentions légales · Charte déontologique · Confidentialité</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+  // ============================================================
+  // WEBGL SHADER — Three.js sine-wave chromatic aberration
+  // Adapté pour ARIES : fond #0a0a0a, aberration teintée bleue
+  // ============================================================
+  import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.min.js';
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas = document.getElementById('particles-canvas');
+
+  if (canvas && !reduced) {
+    const vertexShader = `
+      attribute vec3 position;
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+
+    // Shader adapté ARIES :
+    // — fond #0a0a0a (0.039, 0.039, 0.039)
+    // — lignes teintées vers l'accent bleu #2563eb (0.145, 0.388, 0.922)
+    // — aberration chromatique conservée pour la profondeur
+    const fragmentShader = `
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      uniform float xScale;
+      uniform float yScale;
+      uniform float distortion;
+
+      void main() {
+        vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+
+        float d = length(p) * distortion;
+
+        float rx = p.x * (1.0 + d);
+        float gx = p.x;
+        float bx = p.x * (1.0 - d);
+
+        float r = 0.032 / abs(p.y + sin((rx + time) * xScale) * yScale);
+        float g = 0.032 / abs(p.y + sin((gx + time) * xScale) * yScale);
+        float b = 0.032 / abs(p.y + sin((bx + time) * xScale) * yScale);
+
+        // Base sombre #0a0a0a + teinte bleue sur les lignes
+        float baseR = 0.039;
+        float baseG = 0.039;
+        float baseB = 0.039;
+
+        gl_FragColor = vec4(
+          min(r * 0.18 + baseR, 1.0),
+          min(g * 0.48 + baseG, 1.0),
+          min(b * 1.00 + baseB, 1.0),
+          1.0
+        );
+      }
+    `;
+
+    const scene    = new THREE.Scene();
+    const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(new THREE.Color(0x0a0a0a));
+
+    const uniforms = {
+      resolution:  { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      time:        { value: 0.0 },
+      xScale:      { value: 1.0 },
+      yScale:      { value: 0.42 },
+      distortion:  { value: 0.09 },
+    };
+
+    const positions = new THREE.BufferAttribute(new Float32Array([
+      -1, -1, 0,   1, -1, 0,  -1,  1, 0,
+       1, -1, 0,  -1,  1, 0,   1,  1, 0,
+    ]), 3);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', positions);
+
+    const material = new THREE.RawShaderMaterial({
+      vertexShader, fragmentShader, uniforms,
+      side: THREE.DoubleSide,
+    });
+
+    scene.add(new THREE.Mesh(geometry, material));
+
+    function handleResize() {
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      uniforms.resolution.value.set(w, h);
+    }
+    handleResize();
+
+    let animId;
+    function animate() {
+      uniforms.time.value += 0.003; // vitesse lente, sobre
+      renderer.render(scene, camera);
+      animId = requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener('resize', handleResize, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(animId);
+      else animate();
+    });
+  } else if (canvas) {
+    canvas.style.display = 'none';
+  }
+
+  // ============================================================
+  // Nav scroll state
+  // ============================================================
+  const nav = document.getElementById('nav');
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        nav.classList.toggle('scrolled', window.scrollY > 24);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ============================================================
+  // Reveal on scroll — IntersectionObserver
+  // ============================================================
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('is-visible'));
+  }
+</script>
+
+</body>
+</html>
