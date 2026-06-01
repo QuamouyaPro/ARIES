@@ -59,7 +59,7 @@
     z-index: 0;
   }
 
-  /* WebGL shader canvas */
+  /* WebGL shader canvas — visible sur le hero, s'estompe au scroll */
   #particles-canvas {
     position: fixed;
     inset: 0;
@@ -68,6 +68,8 @@
     pointer-events: none;
     z-index: 1;
     display: block;
+    will-change: opacity;
+    transition: opacity 500ms var(--ease);
   }
 
   main, header, footer { position: relative; z-index: 2; }
@@ -902,13 +904,15 @@
   /* REVEAL */
   .reveal {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    transform: translateY(26px);
+    filter: blur(6px);
+    transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
     transition-delay: var(--delay, 0ms);
   }
   .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -1281,7 +1285,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; transition: none; }
+    .reveal { opacity: 1; transform: none; filter: none; transition: none; }
     [class*="hero-"] { animation: none !important; opacity: 1 !important; }
     * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   }
@@ -1828,18 +1832,54 @@
     }
     handleResize();
 
-    let animId;
-    function animate() {
+    let animId = null;
+    let running = false;
+
+    function renderLoop() {
       uniforms.time.value += 0.003; // vitesse lente, sobre
       renderer.render(scene, camera);
-      animId = requestAnimationFrame(animate);
+      animId = requestAnimationFrame(renderLoop);
     }
-    animate();
+    function startLoop() {
+      if (!running) { running = true; renderLoop(); }
+    }
+    function stopLoop() {
+      if (running) { running = false; cancelAnimationFrame(animId); }
+    }
 
-    window.addEventListener('resize', handleResize, { passive: true });
+    // ── La vague vit UNIQUEMENT sur le hero (effet wow à l'arrivée) ──
+    // Elle s'estompe dès qu'on défile, libérant la lecture des autres sections.
+    let fadeTicking = false;
+    function updateWaveOpacity() {
+      const h = window.innerHeight;
+      const fadeStart = h * 0.16;   // pleine intensité jusqu'ici
+      const fadeEnd   = h * 0.82;   // totalement effacée ici
+      const y = window.scrollY;
+      let opacity;
+      if (y <= fadeStart) opacity = 1;
+      else if (y >= fadeEnd) opacity = 0;
+      else opacity = 1 - (y - fadeStart) / (fadeEnd - fadeStart);
+
+      canvas.style.opacity = opacity.toFixed(3);
+
+      // Couper le GPU quand invisible, relancer en remontant (sauf onglet caché)
+      if (opacity <= 0.01) stopLoop();
+      else if (!document.hidden) startLoop();
+    }
+    function onWaveScroll() {
+      if (!fadeTicking) {
+        requestAnimationFrame(() => { updateWaveOpacity(); fadeTicking = false; });
+        fadeTicking = true;
+      }
+    }
+
+    startLoop();
+    updateWaveOpacity();
+    window.addEventListener('scroll', onWaveScroll, { passive: true });
+    window.addEventListener('resize', () => { handleResize(); updateWaveOpacity(); }, { passive: true });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) cancelAnimationFrame(animId);
-      else animate();
+      if (document.hidden) stopLoop();
+      else updateWaveOpacity(); // ne relance que si la vague doit être visible
     });
   } else if (canvas) {
     canvas.style.display = 'none';
