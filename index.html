@@ -845,7 +845,6 @@
   }
   @media (max-width: 640px) {
     .container { padding: 0 20px; }
-    .nav-links a:not(.nav-cta) { display: none; }
     .modules-shell { grid-template-columns: 1fr; }
     .offres-shell { grid-template-columns: 1fr; }
     .cert-inner { padding: 56px 28px; }
@@ -854,6 +853,152 @@
     .hero { padding-top: 140px; padding-bottom: 60px; }
     .module { padding: 36px 28px; min-height: auto; }
     .offre { padding: 40px 28px; min-height: auto; }
+  }
+
+  /* ── LANG TOGGLE ─────────────────────────────────── */
+  .lang-toggle {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--ink-mute);
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 300ms var(--ease);
+    line-height: 1;
+  }
+  .lang-btn + .lang-btn { border-left: 1px solid var(--line); }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .lang-btn:hover:not(.active) { color: var(--ink); }
+
+  /* ── HAMBURGER ───────────────────────────────────── */
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    width: 38px;
+    padding: 9px 7px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .burger-bar {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
+    transform-origin: center;
+    transition: transform 400ms var(--ease), opacity 300ms var(--ease);
+  }
+  .burger.open .burger-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .burger.open .burger-bar:nth-child(2) { opacity: 0; }
+  .burger.open .burger-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* ── MOBILE MENU ─────────────────────────────────── */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    z-index: 55;
+    display: flex;
+    flex-direction: column;
+    padding: 96px 28px 52px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 350ms var(--ease);
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: all; }
+  .mobile-menu-links { display: flex; flex-direction: column; flex: 1; }
+  .mobile-menu-links a {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 9vw, 50px);
+    font-weight: 400;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: color 300ms var(--ease), opacity 0ms, transform 0ms;
+  }
+  .mobile-menu.open .mobile-menu-links a {
+    opacity: 1;
+    transform: translateY(0);
+    transition: color 300ms var(--ease), opacity 480ms var(--ease), transform 480ms var(--ease);
+  }
+  .mobile-menu.open .mobile-menu-links a:nth-child(1) { transition-delay: 60ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(2) { transition-delay: 110ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(3) { transition-delay: 160ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(4) { transition-delay: 210ms; }
+  .mobile-menu-links a:hover { color: var(--ink); }
+  .mobile-menu-links .mobile-num {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+  }
+  .mobile-bottom {
+    padding-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0ms, transform 0ms;
+  }
+  .mobile-menu.open .mobile-bottom {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 480ms var(--ease) 270ms, transform 480ms var(--ease) 270ms;
+  }
+  .mobile-cta {
+    width: 100%;
+    justify-content: center;
+    padding: 16px;
+    font-size: 14px;
+  }
+  .mobile-lang {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .mobile-lang-btn {
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 300ms var(--ease);
+  }
+  .mobile-lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Masquer nav desktop + afficher burger sur mobile */
+  @media (max-width: 768px) {
+    .burger { display: flex; }
+    .nav-links { display: none !important; }
+    .lang-toggle { display: none !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -871,17 +1016,43 @@
   <div class="container nav-inner">
     <a href="#" class="brand">
       <span class="brand-mark">A R I E S</span>
-      <span class="brand-tag">Intelligence Territoriale</span>
+      <span class="brand-tag" data-i18n="navTag">Intelligence Territoriale</span>
     </a>
     <nav class="nav-links">
-      <a href="#probleme">Constat</a>
-      <a href="#modules">Modules</a>
-      <a href="#pricing">Formules</a>
-      <a href="#certification">Certification</a>
-      <a href="#contact" class="nav-cta">Prendre contact</a>
+      <a href="#probleme" data-i18n="navProbleme">Constat</a>
+      <a href="#modules" data-i18n="navModules">Modules</a>
+      <a href="#pricing" data-i18n="navPricing">Formules</a>
+      <a href="#certification" data-i18n="navCert">Certification</a>
+      <a href="#contact" class="nav-cta" data-i18n="navContact">Prendre contact</a>
     </nav>
+    <div class="lang-toggle" role="group" aria-label="Langue">
+      <button class="lang-btn active" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+    </button>
   </div>
 </header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav class="mobile-menu-links">
+    <a href="#probleme" data-i18n="navProbleme">Constat<span class="mobile-num">01</span></a>
+    <a href="#modules" data-i18n="navModules">Modules<span class="mobile-num">02</span></a>
+    <a href="#pricing" data-i18n="navPricing">Formules<span class="mobile-num">03</span></a>
+    <a href="#certification" data-i18n="navCert">Certification<span class="mobile-num">04</span></a>
+  </nav>
+  <div class="mobile-bottom">
+    <a href="#contact" class="btn btn-primary mobile-cta" data-i18n="navContact">Prendre contact</a>
+    <div class="mobile-lang">
+      <button class="mobile-lang-btn active" data-lang="fr">FR — Français</button>
+      <button class="mobile-lang-btn" data-lang="en">EN — English</button>
+    </div>
+  </div>
+</div>
 
 <main>
 
@@ -892,37 +1063,37 @@
       <div class="hero-grid">
         <div>
           <div class="hero-eyebrow">
-            <span class="eyebrow">Intelligence territoriale française — Édition 2026</span>
+            <span class="eyebrow" data-i18n="heroEyebrow">Intelligence territoriale française — Édition 2026</span>
           </div>
           <h1 class="hero-name">ARIES<span class="dot">.</span></h1>
-          <p class="hero-acronym">
+          <p class="hero-acronym" data-i18n-html="heroAcronym">
             <strong>A</strong>nalyse &nbsp;·&nbsp; <strong>R</strong>enseignement &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/>
             <strong>É</strong>conomique &nbsp;·&nbsp; <strong>S</strong>tratégique
           </p>
-          <p class="hero-headline">
+          <p class="hero-headline" data-i18n-html="heroHeadline">
             Là où la donnée publique reste muette, ARIES traduit le territoire en <em>décision stratégique</em>
           </p>
           <div class="hero-actions">
             <a href="#modules" class="btn btn-primary">
-              Découvrir la plateforme
+              <span data-i18n="heroCta1">Découvrir la plateforme</span>
               <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
-            <a href="#contact" class="btn btn-secondary">Demander un dossier</a>
+            <a href="#contact" class="btn btn-secondary" data-i18n="heroCta2">Demander un dossier</a>
           </div>
         </div>
 
         <aside class="hero-meta">
           <div class="hero-meta-item">
-            <div class="label">Couverture</div>
+            <div class="label" data-i18n="heroLabel1">Couverture</div>
             <div class="value">34 967 communes</div>
           </div>
           <div class="hero-meta-item">
-            <div class="label">Sources publiques agrégées</div>
+            <div class="label" data-i18n="heroLabel2">Sources publiques agrégées</div>
             <div class="value">127 flux normalisés</div>
           </div>
           <div class="hero-meta-item">
-            <div class="label">Mise à jour</div>
-            <div class="value">Cycles trimestriels</div>
+            <div class="label" data-i18n="heroLabel3">Mise à jour</div>
+            <div class="value" data-i18n="heroVal3">Cycles trimestriels</div>
           </div>
         </aside>
       </div>
@@ -934,19 +1105,19 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow">01 — Le constat</span></div>
-          <h2 class="section-title reveal" style="--delay: 100ms;">
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="probEyebrow">01 — Le constat</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="probTitle">
             Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.
           </h2>
         </div>
-        <p class="section-lede reveal" style="--delay: 200ms;">
+        <p class="section-lede reveal" style="--delay: 200ms;" data-i18n="probLede">
           La France publie chaque année des milliers de jeux de données sur ses territoires : finances locales, marchés publics, schémas de cohérence, indicateurs INSEE, registres fonciers. Aucun acteur économique ne peut les exploiter dans la durée — l'information existe, mais elle reste inerte.
         </p>
       </div>
 
       <div class="problem-grid">
         <div class="reveal">
-          <blockquote class="problem-quote">
+          <blockquote class="problem-quote" data-i18n-html="probQuote">
             Le décideur économique français travaille à l'aveugle sur des territoires <span class="accent">où tout est pourtant déjà documenté.</span> ARIES restitue le signal.
           </blockquote>
         </div>
@@ -974,12 +1145,12 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow">02 — La plateforme</span></div>
-          <h2 class="section-title reveal" style="--delay: 100ms;">
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="modEyebrow">02 — La plateforme</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="modTitle">
             Six modules,<br/>une seule <em>lecture du territoire.</em>
           </h2>
         </div>
-        <p class="section-lede reveal" style="--delay: 200ms;">
+        <p class="section-lede reveal" style="--delay: 200ms;" data-i18n="modLede">
           Chaque module d'ARIES répond à une question stratégique précise. Les six convergent en un dossier territorial unifié, livré sous format institutionnel — note de synthèse, fiche scoring, cartographie commentée.
         </p>
       </div>
@@ -1059,94 +1230,94 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow">03 — Tarification</span></div>
-          <h2 class="section-title reveal" style="--delay: 100ms;">
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="priceEyebrow">03 — Tarification</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="priceTitle">
             Nos <em>formules,</em><br/>du rapport ponctuel à l'institutionnel.
           </h2>
         </div>
-        <p class="section-lede reveal" style="--delay: 200ms;">
+        <p class="section-lede reveal" style="--delay: 200ms;" data-i18n="priceLede">
           Chaque formule est calibrée pour un usage précis. Aucun crédit, aucune métrique opaque : un périmètre, un volume de rapports, un horizon d'engagement clair.
         </p>
       </div>
 
       <div class="offres-shell reveal">
         <article class="offre">
-          <div class="offre-kind">Ponctuel</div>
+          <div class="offre-kind" data-i18n="price1Kind">Ponctuel</div>
           <h3 class="offre-name">À la carte</h3>
           <div class="offre-price">790 €<span class="unit"> / rapport</span></div>
-          <div class="offre-commit">Sans engagement</div>
-          <p class="offre-target">Décideur ponctuel cherchant une analyse territoriale unique, à la demande.</p>
+          <div class="offre-commit" data-i18n="price1Commit">Sans engagement</div>
+          <p class="offre-target" data-i18n="price1Target">Décideur ponctuel cherchant une analyse territoriale unique, à la demande.</p>
           <ul class="offre-list">
-            <li>Rapport personnalisé sur commande</li>
-            <li>Livraison sous 48 heures</li>
-            <li>Choix libre du module</li>
-            <li>Sans engagement</li>
+            <li data-i18n="price1f1">Rapport personnalisé sur commande</li>
+            <li data-i18n="price1f2">Livraison sous 48 heures</li>
+            <li data-i18n="price1f3">Choix libre du module</li>
+            <li data-i18n="price1f4">Sans engagement</li>
           </ul>
           <a href="#contact" class="btn btn-secondary offre-cta">
-            Commander un rapport
+            <span data-i18n="price1Cta">Commander un rapport</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </article>
 
         <article class="offre">
-          <div class="offre-kind">Basic</div>
+          <div class="offre-kind" data-i18n="price2Kind">Abonnement</div>
           <h3 class="offre-name">Basic</h3>
           <div class="offre-price">590 €<span class="unit"> / mois</span></div>
-          <div class="offre-commit">Engagement 12 mois</div>
-          <p class="offre-target">TPE et porteurs de projet suivant un territoire dans la durée.</p>
+          <div class="offre-commit" data-i18n="price2Commit">Engagement 12 mois</div>
+          <p class="offre-target" data-i18n="price2Target">TPE et porteurs de projet suivant un territoire dans la durée.</p>
           <ul class="offre-list">
-            <li>3 rapports par mois</li>
-            <li>Modules Score &amp; Insight</li>
-            <li>Alertes hebdomadaires</li>
-            <li>Dashboard de suivi</li>
+            <li data-i18n="price2f1">3 rapports par mois</li>
+            <li data-i18n="price2f2">Modules Score &amp; Insight</li>
+            <li data-i18n="price2f3">Alertes hebdomadaires</li>
+            <li data-i18n="price2f4">Dashboard de suivi</li>
           </ul>
           <a href="#contact" class="btn btn-secondary offre-cta">
-            Démarrer
+            <span data-i18n="price2Cta">Démarrer</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </article>
 
         <article class="offre offre--featured">
-          <div class="offre-badge">Recommandé</div>
-          <div class="offre-kind">Premium</div>
+          <div class="offre-badge" data-i18n="price3Badge">Recommandé</div>
+          <div class="offre-kind" data-i18n="price3Kind">Premium</div>
           <h3 class="offre-name">Premium</h3>
           <div class="offre-price">1 900 €<span class="unit"> / mois</span></div>
-          <div class="offre-commit">Engagement 12 mois</div>
-          <p class="offre-target">PME, cabinets et investisseurs pilotant un portefeuille de territoires.</p>
+          <div class="offre-commit" data-i18n="price3Commit">Engagement 12 mois</div>
+          <p class="offre-target" data-i18n="price3Target">PME, cabinets et investisseurs pilotant un portefeuille de territoires.</p>
           <ul class="offre-list">
-            <li>12 rapports par mois</li>
-            <li>Tous les modules ARIES</li>
-            <li>Rapports sur commande inclus</li>
-            <li>Synthèses mensuelles &amp; trimestrielles</li>
-            <li>Support prioritaire</li>
+            <li data-i18n="price3f1">12 rapports par mois</li>
+            <li data-i18n="price3f2">Tous les modules ARIES</li>
+            <li data-i18n="price3f3">Rapports sur commande inclus</li>
+            <li data-i18n="price3f4">Synthèses mensuelles &amp; trimestrielles</li>
+            <li data-i18n="price3f5">Support prioritaire</li>
           </ul>
           <a href="#contact" class="btn btn-primary offre-cta">
-            Démarrer
+            <span data-i18n="price3Cta">Démarrer</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </article>
 
         <article class="offre">
-          <div class="offre-kind">Ultra</div>
+          <div class="offre-kind" data-i18n="price4Kind">Institutionnel</div>
           <h3 class="offre-name">Ultra</h3>
-          <div class="offre-price">Sur devis</div>
-          <div class="offre-commit">Plancher 8 000 € / mois</div>
-          <p class="offre-target">Collectivités, fonds et grands groupes opérant à l'échelle nationale.</p>
+          <div class="offre-price" data-i18n="price4Price">Sur devis</div>
+          <div class="offre-commit" data-i18n="price4Commit">Plancher 8 000 € / mois</div>
+          <p class="offre-target" data-i18n="price4Target">Collectivités, fonds et grands groupes opérant à l'échelle nationale.</p>
           <ul class="offre-list">
-            <li>Rapports illimités</li>
-            <li>Accès API data ARIES</li>
-            <li>Scoring en marque blanche</li>
-            <li>Account manager dédié</li>
-            <li>Missions de conseil incluses</li>
+            <li data-i18n="price4f1">Rapports illimités</li>
+            <li data-i18n="price4f2">Accès API data ARIES</li>
+            <li data-i18n="price4f3">Scoring en marque blanche</li>
+            <li data-i18n="price4f4">Account manager dédié</li>
+            <li data-i18n="price4f5">Missions de conseil incluses</li>
           </ul>
           <a href="#contact" class="btn btn-secondary offre-cta">
-            Nous contacter
+            <span data-i18n="price4Cta">Nous contacter</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </article>
       </div>
 
-      <p class="pricing-note reveal">Tarification définitive à venir — positionnement ultra-premium.</p>
+      <p class="pricing-note reveal" data-i18n="priceNote">Tarification définitive à venir — positionnement ultra-premium.</p>
     </div>
   </section>
 
@@ -1155,37 +1326,37 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow">04 — Différenciation</span></div>
-          <h2 class="section-title reveal" style="--delay: 100ms;">
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="whyEyebrow">04 — Différenciation</span></div>
+          <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="whyTitle">
             Pourquoi ARIES,<br/>plutôt qu'<em>une étude de cabinet.</em>
           </h2>
         </div>
-        <p class="section-lede reveal" style="--delay: 200ms;">
+        <p class="section-lede reveal" style="--delay: 200ms;" data-i18n="whyLede">
           Trois engagements structurels qui nous séparent des prestations classiques de conseil et des outils de data brute.
         </p>
       </div>
 
       <div class="pourquoi-grid">
         <div class="argument reveal">
-          <div class="argument-num">i — Indépendance</div>
-          <h3 class="argument-title"><em>Indépendance</em> documentée.</h3>
-          <p class="argument-text">
+          <div class="argument-num" data-i18n="why1Num">i — Indépendance</div>
+          <h3 class="argument-title" data-i18n-html="why1Title"><em>Indépendance</em> documentée.</h3>
+          <p class="argument-text" data-i18n="why1Text">
             ARIES n'accepte aucun mandat de collectivité scorée, aucun contrat de promotion territoriale. Notre matière première — la donnée publique — est traçable ; notre lecture, opposable.
           </p>
         </div>
 
         <div class="argument reveal" style="--delay: 120ms;">
-          <div class="argument-num">ii — Continuité</div>
-          <h3 class="argument-title"><em>Continuité</em> de la donnée.</h3>
-          <p class="argument-text">
+          <div class="argument-num" data-i18n="why2Num">ii — Continuité</div>
+          <h3 class="argument-title" data-i18n-html="why2Title"><em>Continuité</em> de la donnée.</h3>
+          <p class="argument-text" data-i18n="why2Text">
             Là où un cabinet livre une photographie figée, ARIES suit le territoire dans la durée. Chaque rapport s'inscrit dans une trajectoire — utile, comparable, vérifiable trimestre après trimestre.
           </p>
         </div>
 
         <div class="argument reveal" style="--delay: 240ms;">
-          <div class="argument-num">iii — Lecture</div>
-          <h3 class="argument-title">Lecture <em>institutionnelle.</em></h3>
-          <p class="argument-text">
+          <div class="argument-num" data-i18n="why3Num">iii — Lecture</div>
+          <h3 class="argument-title" data-i18n-html="why3Title">Lecture <em>institutionnelle.</em></h3>
+          <p class="argument-text" data-i18n="why3Text">
             Nos livrables adoptent le format des notes ministérielles et préfectorales. Ils circulent sans traduction dans les comités de direction, les conseils d'administration et les cabinets d'exécutifs.
           </p>
         </div>
@@ -1201,19 +1372,19 @@
           <div class="cert-seal-mark">
             <div class="cert-seal-inner">A<sup>™</sup></div>
           </div>
-          <div class="cert-seal-label">Certification ARIES · 2026</div>
+          <div class="cert-seal-label" data-i18n="certLabel">Certification ARIES · 2026</div>
         </div>
         <div>
-          <div class="section-eyebrow-row"><span class="eyebrow">05 — Gage de rigueur</span></div>
-          <h2 class="cert-title">La <em>Certification ARIES™</em> — un standard de méthode.</h2>
-          <p class="cert-text">
+          <div class="section-eyebrow-row"><span class="eyebrow" data-i18n="certEyebrow">05 — Gage de rigueur</span></div>
+          <h2 class="cert-title" data-i18n-html="certTitle">La <em>Certification ARIES™</em> — un standard de méthode.</h2>
+          <p class="cert-text" data-i18n-html="certText">
             Chaque rapport publié porte la mention <em>Certifié ARIES</em>. Elle garantit la double validation analytique, la traçabilité intégrale des sources publiques mobilisées, et le respect strict de la charte déontologique du cabinet. C'est notre signature : un livrable défendable devant un préfet, une commission d'enquête, un conseil de surveillance.
           </p>
           <div class="cert-tags">
-            <span class="cert-tag">Double signature analyste</span>
-            <span class="cert-tag">Source traçable</span>
-            <span class="cert-tag">Données souveraines</span>
-            <span class="cert-tag">Charte déontologique</span>
+            <span class="cert-tag" data-i18n="certTag1">Double signature analyste</span>
+            <span class="cert-tag" data-i18n="certTag2">Source traçable</span>
+            <span class="cert-tag" data-i18n="certTag3">Données souveraines</span>
+            <span class="cert-tag" data-i18n="certTag4">Charte déontologique</span>
           </div>
         </div>
       </div>
@@ -1227,20 +1398,20 @@
     <div class="footer-grid">
       <div>
         <div class="footer-brand reveal"><em>ARIES</em><span class="dot">.</span></div>
-        <p class="footer-acronym reveal" style="--delay: 100ms;">
+        <p class="footer-acronym reveal" style="--delay: 100ms;" data-i18n-html="footAcronym">
           <strong>A</strong>nalyse · <strong>R</strong>enseignement · <strong>I</strong>ntelligence<br/>
           <strong>É</strong>conomique · <strong>S</strong>tratégique
         </p>
       </div>
       <div class="footer-col reveal" style="--delay: 150ms;">
-        <h4>Plateforme</h4>
+        <h4 data-i18n="footCol1">Plateforme</h4>
         <a href="#modules">Modules</a>
         <a href="#pricing">Formules</a>
         <a href="#certification">Certification</a>
         <a href="#probleme">Méthode</a>
       </div>
       <div class="footer-col reveal" style="--delay: 200ms;">
-        <h4>Contact</h4>
+        <h4 data-i18n="footCol2">Contact</h4>
         <p>cabinet@aries-intelligence.fr</p>
         <p>+33 (0)1 47 03 28 14</p>
         <p>17 rue de Solférino<br/>75007 Paris</p>
@@ -1361,6 +1532,158 @@
   } else if (canvas) {
     canvas.style.display = 'none';
   }
+
+  // ============================================================
+  // TRANSLATIONS — FR / EN
+  // ============================================================
+  const T = {
+    fr: {
+      navTag:'Intelligence Territoriale', navProbleme:'Constat', navModules:'Modules',
+      navPricing:'Formules', navCert:'Certification', navContact:'Prendre contact',
+      heroEyebrow:'Intelligence territoriale française — Édition 2026',
+      heroAcronym:'<strong>A</strong>nalyse &nbsp;·&nbsp; <strong>R</strong>enseignement &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/><strong>É</strong>conomique &nbsp;·&nbsp; <strong>S</strong>tratégique',
+      heroHeadline:'Là où la donnée publique reste muette, ARIES traduit le territoire en <em>décision stratégique</em>',
+      heroCta1:'Découvrir la plateforme', heroCta2:'Demander un dossier',
+      heroLabel1:'Couverture', heroLabel2:'Sources publiques agrégées',
+      heroLabel3:'Mise à jour', heroVal3:'Cycles trimestriels',
+      probEyebrow:'01 — Le constat',
+      probTitle:'Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.',
+      probLede:"La France publie chaque année des milliers de jeux de données sur ses territoires : finances locales, marchés publics, schémas de cohérence, indicateurs INSEE, registres fonciers. Aucun acteur économique ne peut les exploiter dans la durée — l'information existe, mais elle reste inerte.",
+      probQuote:'Le décideur économique français travaille à l\'aveugle sur des territoires <span class="accent">où tout est pourtant déjà documenté.</span> ARIES restitue le signal.',
+      modEyebrow:'02 — La plateforme',
+      modTitle:'Six modules,<br/>une seule <em>lecture du territoire.</em>',
+      modLede:"Chaque module d'ARIES répond à une question stratégique précise. Les six convergent en un dossier territorial unifié, livré sous format institutionnel — note de synthèse, fiche scoring, cartographie commentée.",
+      priceEyebrow:'03 — Tarification',
+      priceTitle:'Nos <em>formules,</em><br/>du rapport ponctuel à l\'institutionnel.',
+      priceLede:'Chaque formule est calibrée pour un usage précis. Aucun crédit, aucune métrique opaque : un périmètre, un volume de rapports, un horizon d\'engagement clair.',
+      price1Kind:'Ponctuel', price1Commit:'Sans engagement', price1Target:"Décideur ponctuel cherchant une analyse territoriale unique, à la demande.",
+      price1f1:'Rapport personnalisé sur commande', price1f2:'Livraison sous 48 heures', price1f3:'Choix libre du module', price1f4:'Sans engagement', price1Cta:'Commander un rapport',
+      price2Kind:'Abonnement', price2Commit:'Engagement 12 mois', price2Target:'TPE et porteurs de projet suivant un territoire dans la durée.',
+      price2f1:'3 rapports par mois', price2f2:'Modules Score & Insight', price2f3:'Alertes hebdomadaires', price2f4:'Dashboard de suivi', price2Cta:'Démarrer',
+      price3Badge:'Recommandé', price3Kind:'Premium', price3Commit:'Engagement 12 mois', price3Target:'PME, cabinets et investisseurs pilotant un portefeuille de territoires.',
+      price3f1:'12 rapports par mois', price3f2:'Tous les modules ARIES', price3f3:'Rapports sur commande inclus', price3f4:'Synthèses mensuelles & trimestrielles', price3f5:'Support prioritaire', price3Cta:'Démarrer',
+      price4Kind:'Institutionnel', price4Price:'Sur devis', price4Commit:'Plancher 8 000 € / mois', price4Target:"Collectivités, fonds et grands groupes opérant à l'échelle nationale.",
+      price4f1:'Rapports illimités', price4f2:'Accès API data ARIES', price4f3:'Scoring en marque blanche', price4f4:'Account manager dédié', price4f5:'Missions de conseil incluses', price4Cta:'Nous contacter',
+      priceNote:'Tarification définitive à venir — positionnement ultra-premium.',
+      whyEyebrow:'04 — Différenciation',
+      whyTitle:"Pourquoi ARIES,<br/>plutôt qu'<em>une étude de cabinet.</em>",
+      whyLede:'Trois engagements structurels qui nous séparent des prestations classiques de conseil et des outils de data brute.',
+      why1Num:'i — Indépendance', why1Title:'<em>Indépendance</em> documentée.',
+      why1Text:"ARIES n'accepte aucun mandat de collectivité scorée, aucun contrat de promotion territoriale. Notre matière première — la donnée publique — est traçable ; notre lecture, opposable.",
+      why2Num:'ii — Continuité', why2Title:'<em>Continuité</em> de la donnée.',
+      why2Text:"Là où un cabinet livre une photographie figée, ARIES suit le territoire dans la durée. Chaque rapport s'inscrit dans une trajectoire — utile, comparable, vérifiable trimestre après trimestre.",
+      why3Num:'iii — Lecture', why3Title:'Lecture <em>institutionnelle.</em>',
+      why3Text:"Nos livrables adoptent le format des notes ministérielles et préfectorales. Ils circulent sans traduction dans les comités de direction, les conseils d'administration et les cabinets d'exécutifs.",
+      certEyebrow:'05 — Gage de rigueur', certLabel:'Certification ARIES · 2026',
+      certTitle:'La <em>Certification ARIES™</em> — un standard de méthode.',
+      certText:"Chaque rapport publié porte la mention <em>Certifié ARIES</em>. Elle garantit la double validation analytique, la traçabilité intégrale des sources publiques mobilisées, et le respect strict de la charte déontologique du cabinet. C'est notre signature : un livrable défendable devant un préfet, une commission d'enquête, un conseil de surveillance.",
+      certTag1:'Double signature analyste', certTag2:'Source traçable', certTag3:'Données souveraines', certTag4:'Charte déontologique',
+      footAcronym:'<strong>A</strong>nalyse · <strong>R</strong>enseignement · <strong>I</strong>ntelligence<br/><strong>É</strong>conomique · <strong>S</strong>tratégique',
+      footCol1:'Plateforme', footCol2:'Contact',
+    },
+    en: {
+      navTag:'Territorial Intelligence', navProbleme:'Overview', navModules:'Modules',
+      navPricing:'Pricing', navCert:'Certification', navContact:'Get in touch',
+      heroEyebrow:'French Territorial Intelligence — 2026 Edition',
+      heroAcronym:'<strong>A</strong>nalysis &nbsp;·&nbsp; <strong>R</strong>esearch &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/><strong>E</strong>conomic &nbsp;·&nbsp; <strong>S</strong>trategic',
+      heroHeadline:'Where public data stays silent, ARIES turns territory into <em>strategic decisions</em>',
+      heroCta1:'Discover the platform', heroCta2:'Request a briefing',
+      heroLabel1:'Coverage', heroLabel2:'Aggregated public sources',
+      heroLabel3:'Update cycle', heroVal3:'Quarterly cycles',
+      probEyebrow:'01 — The challenge',
+      probTitle:'An <em>abundant</em> public dataset,<br/>but never readable.',
+      probLede:'France publishes thousands of territorial datasets each year: local finances, public procurement, urban planning, INSEE indicators, land registries. No economic actor can exploit them over time — the information exists, but remains inert.',
+      probQuote:'French economic decision-makers work blind on territories <span class="accent">where everything is already documented.</span> ARIES restores the signal.',
+      modEyebrow:'02 — The platform',
+      modTitle:'Six modules,<br/>one unified <em>territorial view.</em>',
+      modLede:'Each ARIES module answers a precise strategic question. The six converge into a unified territorial dossier, delivered in institutional format — executive summary, scoring sheet, annotated mapping.',
+      priceEyebrow:'03 — Pricing',
+      priceTitle:'Our <em>plans,</em><br/>from a single report to enterprise.',
+      priceLede:'Each plan is calibrated for a specific use. No credits, no opaque metrics: one scope, one report volume, one clear commitment horizon.',
+      price1Kind:'One-off', price1Commit:'No commitment', price1Target:'Occasional decision-maker seeking a one-time territorial analysis, on demand.',
+      price1f1:'Custom report on demand', price1f2:'Delivered within 48 hours', price1f3:'Free choice of module', price1f4:'No commitment', price1Cta:'Order a report',
+      price2Kind:'Subscription', price2Commit:'12-month commitment', price2Target:'SMEs and project owners tracking a territory over time.',
+      price2f1:'3 reports per month', price2f2:'Score & Insight modules', price2f3:'Weekly alerts', price2f4:'Tracking dashboard', price2Cta:'Get started',
+      price3Badge:'Recommended', price3Kind:'Premium', price3Commit:'12-month commitment', price3Target:'SMEs, consultancies and investors managing a portfolio of territories.',
+      price3f1:'12 reports per month', price3f2:'All ARIES modules', price3f3:'On-demand reports included', price3f4:'Monthly & quarterly briefings', price3f5:'Priority support', price3Cta:'Get started',
+      price4Kind:'Enterprise', price4Price:'Custom quote', price4Commit:'Floor price €8,000 / month', price4Target:'Local authorities, funds and large groups operating at national scale.',
+      price4f1:'Unlimited reports', price4f2:'ARIES data API access', price4f3:'White-label scoring', price4f4:'Dedicated account manager', price4f5:'Advisory missions included', price4Cta:'Contact us',
+      priceNote:'Final pricing to be confirmed — ultra-premium positioning.',
+      whyEyebrow:'04 — Differentiation',
+      whyTitle:'Why ARIES,<br/>rather than <em>a consulting study.</em>',
+      whyLede:'Three structural commitments that set us apart from traditional consulting and raw data tools.',
+      why1Num:'i — Independence', why1Title:'Documented <em>independence.</em>',
+      why1Text:'ARIES accepts no mandate from scored local authorities, no territorial promotion contract. Our raw material — public data — is traceable; our analysis, defensible.',
+      why2Num:'ii — Continuity', why2Title:'Data <em>continuity.</em>',
+      why2Text:'Where a consultancy delivers a frozen snapshot, ARIES tracks the territory over time. Each report is part of a trajectory — useful, comparable, verifiable quarter after quarter.',
+      why3Num:'iii — Format', why3Title:'<em>Institutional</em> format.',
+      why3Text:'Our deliverables adopt the format of ministerial and prefectural notes. They circulate without translation in management committees, boards of directors, and executive offices.',
+      certEyebrow:'05 — Quality standard', certLabel:'ARIES Certification · 2026',
+      certTitle:'The <em>ARIES™ Certification</em> — a methodological standard.',
+      certText:"Every published report bears the <em>ARIES Certified</em> mark. It guarantees dual analytical validation, full traceability of public sources, and strict compliance with the firm's ethical charter. Our signature: a deliverable defensible before a prefect, an inquiry commission, or a supervisory board.",
+      certTag1:'Dual analyst signature', certTag2:'Traceable source', certTag3:'Sovereign data', certTag4:'Ethics charter',
+      footAcronym:'<strong>A</strong>nalysis · <strong>R</strong>esearch · <strong>I</strong>ntelligence<br/><strong>E</strong>conomic · <strong>S</strong>trategic',
+      footCol1:'Platform', footCol2:'Contact',
+    }
+  };
+
+  let currentLang = localStorage.getItem('aries-lang') || 'fr';
+
+  function applyLang(lang) {
+    const t = T[lang];
+    // textContent elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.dataset.i18n;
+      if (t[k] !== undefined) el.textContent = t[k];
+    });
+    // innerHTML elements
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const k = el.dataset.i18nHtml;
+      if (t[k] !== undefined) el.innerHTML = t[k];
+    });
+    // Sync all lang buttons (nav desktop + mobile menu)
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.documentElement.lang = lang;
+    localStorage.setItem('aries-lang', lang);
+    currentLang = lang;
+  }
+
+  // Lang toggle clicks (desktop + mobile)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-lang]');
+    if (btn) applyLang(btn.dataset.lang);
+  });
+
+  applyLang(currentLang);
+
+  // ============================================================
+  // HAMBURGER — mobile menu
+  // ============================================================
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function toggleMenu(force) {
+    const open = force !== undefined ? force : !burger.classList.contains('open');
+    burger.classList.toggle('open', open);
+    mobileMenu.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  burger.addEventListener('click', () => toggleMenu());
+
+  // Close on link click
+  mobileMenu.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => toggleMenu(false))
+  );
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') toggleMenu(false);
+  });
 
   // ============================================================
   // Nav scroll state
