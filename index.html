@@ -120,7 +120,9 @@
     to   { transform: translate3d(-6vw, 8vh, 0); }
   }
 
-  /* WebGL shader canvas — visible sur le hero, s'estompe au scroll */
+  /* WebGL shader canvas — visible sur le hero, s'estompe au scroll.
+     Pas de transition : l'opacité est pilotée par rAF à chaque frame,
+     ce qui donne un suivi 1:1 parfaitement fluide du défilement. */
   #particles-canvas {
     position: fixed;
     inset: 0;
@@ -130,7 +132,7 @@
     z-index: 1;
     display: block;
     will-change: opacity;
-    transition: opacity 500ms var(--ease);
+    transform: translateZ(0);
   }
 
   main, header, footer { position: relative; z-index: 2; }
@@ -501,7 +503,6 @@
     align-items: center;
     gap: 20px;
     position: relative;
-    transition: padding-left 450ms var(--ease);
     width: 100%;
     font-family: inherit;
   }
@@ -517,28 +518,29 @@
     transform-origin: top;
     transition: transform 450ms var(--ease);
   }
-  .module-tab.active { padding-left: 24px; }
   .module-tab.active::before { transform: scaleY(1); }
+  /* Micro-décalage du contenu via transform (compositeur, zéro layout) */
   .module-tab-num {
     font-family: 'Geist', sans-serif;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.18em;
     color: var(--ink-mute);
-    transition: color 400ms var(--ease);
+    transition: color 400ms var(--ease), transform 450ms var(--ease);
     flex-shrink: 0;
   }
-  .module-tab.active .module-tab-num { color: var(--accent); }
+  .module-tab.active .module-tab-num { color: var(--accent); transform: translateX(20px); }
   .module-tab-name {
     font-family: 'Instrument Serif', serif;
     font-size: 30px;
     font-weight: 400;
     color: var(--ink-soft);
     letter-spacing: -0.01em;
-    transition: color 400ms var(--ease);
+    transition: color 400ms var(--ease), transform 450ms var(--ease);
     flex: 1;
     line-height: 1;
   }
+  .module-tab.active .module-tab-name { transform: translateX(20px); }
   .module-tab.active .module-tab-name,
   .module-tab:hover .module-tab-name { color: var(--ink); }
   .module-tab-dot {
@@ -965,15 +967,13 @@
   /* REVEAL */
   .reveal {
     opacity: 0;
-    transform: translateY(26px);
-    filter: blur(6px);
-    transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
+    transform: translateY(24px);
+    transition: opacity 800ms var(--ease), transform 800ms var(--ease);
     transition-delay: var(--delay, 0ms);
   }
   .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -1078,7 +1078,9 @@
       white-space: nowrap;
       min-width: max-content;
     }
-    .module-tab.active { padding-left: 20px; }
+    /* Pas de décalage horizontal sur les pills mobiles : la barre du bas suffit */
+    .module-tab.active .module-tab-num,
+    .module-tab.active .module-tab-name { transform: none; }
     .module-tab::before {
       top: auto; bottom: 0; left: 0; right: 0;
       width: auto; height: 2px;
@@ -2160,23 +2162,6 @@
   });
 
   // ============================================================
-  // Nav scroll state
-  // ============================================================
-  const nav = document.getElementById('nav');
-  let ticking = false;
-  function onScroll() {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        nav.classList.toggle('scrolled', window.scrollY > 24);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  // ============================================================
   // Reveal on scroll — IntersectionObserver
   // ============================================================
   const reveals = document.querySelectorAll('.reveal');
@@ -2248,16 +2233,38 @@
     });
   });
 
-  // Afficher la barre après le hero
-  function toggleQuickNav() {
-    if (!heroSection) return;
-    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight - 200;
-    quickNav.classList.toggle('show', window.scrollY > heroBottom * 0.4);
+  // ============================================================
+  // SCROLL UNIFIÉ — un seul écouteur, rAF-throttlé, mesures en cache.
+  // Évite le layout thrashing : aucune lecture de offsetTop/Height
+  // pendant le défilement (toutes mises en cache à resize/load).
+  // ============================================================
+  const navEl = document.getElementById('nav');
+  let quickThreshold = 0;
+  function measure() {
+    quickThreshold = heroSection
+      ? (heroSection.offsetTop + heroSection.offsetHeight) * 0.4
+      : window.innerHeight * 0.4;
   }
-  window.addEventListener('scroll', toggleQuickNav, { passive: true });
-  toggleQuickNav();
+  measure();
+  window.addEventListener('resize', measure, { passive: true });
+  window.addEventListener('load', measure);
 
-  // Scroll-spy : surligne la section active
+  let scrollTicking = false;
+  function handleScroll() {
+    const y = window.scrollY;
+    navEl.classList.toggle('scrolled', y > 24);
+    if (heroSection) quickNav.classList.toggle('show', y > quickThreshold);
+    scrollTicking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      requestAnimationFrame(handleScroll);
+    }
+  }, { passive: true });
+  handleScroll();
+
+  // Scroll-spy : surligne la section active (IntersectionObserver, sans coût scroll)
   if ('IntersectionObserver' in window) {
     const sectionIds = ['hero', 'probleme', 'modules', 'pricing', 'pourquoi', 'certification', 'contact'];
     const spy = new IntersectionObserver((entries) => {
