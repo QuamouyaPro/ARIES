@@ -516,12 +516,12 @@
     font-style: italic;
     font-size: clamp(80px, 9vw, 130px);
     line-height: 0.8;
-    color: var(--surface-2);
+    color: rgba(245, 241, 232, 0.22);
     letter-spacing: -0.03em;
     margin-bottom: 28px;
     user-select: none;
   }
-  .module-panel-watermark .pn { color: var(--accent); opacity: 0.5; }
+  .module-panel-watermark .pn { color: var(--accent); opacity: 0.7; }
   .module-panel-name {
     font-family: 'Instrument Serif', serif;
     font-size: clamp(40px, 4.5vw, 60px);
@@ -1221,9 +1221,10 @@
     transition: color 300ms var(--ease), opacity 480ms var(--ease), transform 480ms var(--ease);
   }
   .mobile-menu.open .mobile-menu-links a:nth-child(1) { transition-delay: 60ms; }
-  .mobile-menu.open .mobile-menu-links a:nth-child(2) { transition-delay: 110ms; }
-  .mobile-menu.open .mobile-menu-links a:nth-child(3) { transition-delay: 160ms; }
-  .mobile-menu.open .mobile-menu-links a:nth-child(4) { transition-delay: 210ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(2) { transition-delay: 105ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(3) { transition-delay: 150ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(4) { transition-delay: 195ms; }
+  .mobile-menu.open .mobile-menu-links a:nth-child(5) { transition-delay: 240ms; }
   .mobile-menu-links a:hover { color: var(--ink); }
   .mobile-menu-links .mobile-num {
     font-family: 'Geist', sans-serif;
@@ -1297,10 +1298,11 @@
       <span class="brand-tag" data-i18n="navTag">Intelligence Territoriale</span>
     </a>
     <nav class="nav-links">
-      <a href="#probleme" data-i18n="navProbleme">Constat</a>
-      <a href="#modules" data-i18n="navModules">Modules</a>
-      <a href="#pricing" data-i18n="navPricing">Formules</a>
-      <a href="#certification" data-i18n="navCert">Certification</a>
+      <a href="#probleme" data-i18n="navProbleme">Le constat</a>
+      <a href="#modules" data-i18n="navModules">La plateforme</a>
+      <a href="#pricing" data-i18n="navPricing">Tarification</a>
+      <a href="#pourquoi" data-i18n="navWhy">Différenciation</a>
+      <a href="#certification" data-i18n="navCert">La Certification</a>
       <a href="#contact" class="nav-cta" data-i18n="navContact">Prendre contact</a>
     </nav>
     <div class="lang-toggle" role="group" aria-label="Langue">
@@ -1318,10 +1320,11 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
   <nav class="mobile-menu-links">
-    <a href="#probleme" data-i18n="navProbleme">Constat<span class="mobile-num">01</span></a>
-    <a href="#modules" data-i18n="navModules">Modules<span class="mobile-num">02</span></a>
-    <a href="#pricing" data-i18n="navPricing">Formules<span class="mobile-num">03</span></a>
-    <a href="#certification" data-i18n="navCert">Certification<span class="mobile-num">04</span></a>
+    <a href="#probleme"><span data-i18n="navProbleme">Le constat</span><span class="mobile-num">01</span></a>
+    <a href="#modules"><span data-i18n="navModules">La plateforme</span><span class="mobile-num">02</span></a>
+    <a href="#pricing"><span data-i18n="navPricing">Tarification</span><span class="mobile-num">03</span></a>
+    <a href="#pourquoi"><span data-i18n="navWhy">Différenciation</span><span class="mobile-num">04</span></a>
+    <a href="#certification"><span data-i18n="navCert">La Certification</span><span class="mobile-num">05</span></a>
   </nav>
   <div class="mobile-bottom">
     <a href="#contact" class="btn btn-primary mobile-cta" data-i18n="navContact">Prendre contact</a>
@@ -1383,7 +1386,7 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="probEyebrow">01 — Le constat</span></div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="probEyebrow">Le constat</span></div>
           <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="probTitle">
             Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.
           </h2>
@@ -1423,7 +1426,7 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="modEyebrow">02 — La plateforme</span></div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="modEyebrow">La plateforme</span></div>
           <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="modTitle">
             Six modules,<br/>une seule <em>lecture du territoire.</em>
           </h2>
@@ -1528,7 +1531,7 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="priceEyebrow">03 — Tarification</span></div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="priceEyebrow">Tarification</span></div>
           <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="priceTitle">
             Nos <em>formules,</em><br/>du rapport ponctuel à l'institutionnel.
           </h2>
@@ -1624,7 +1627,7 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="whyEyebrow">04 — Différenciation</span></div>
+          <div class="section-eyebrow-row reveal"><span class="eyebrow" data-i18n="whyEyebrow">Différenciation</span></div>
           <h2 class="section-title reveal" style="--delay: 100ms;" data-i18n-html="whyTitle">
             Pourquoi ARIES,<br/>plutôt qu'<em>une étude de cabinet.</em>
           </h2>
@@ -1673,7 +1676,7 @@
           <div class="cert-seal-label" data-i18n="certLabel">Certification ARIES · 2026</div>
         </div>
         <div>
-          <div class="section-eyebrow-row"><span class="eyebrow" data-i18n="certEyebrow">05 — Gage de rigueur</span></div>
+          <div class="section-eyebrow-row"><span class="eyebrow" data-i18n="certEyebrow">La Certification</span></div>
           <h2 class="cert-title" data-i18n-html="certTitle">La <em>Certification ARIES™</em> — un standard de méthode.</h2>
           <p class="cert-text" data-i18n-html="certText">
             Chaque rapport publié porte la mention <em>Certifié ARIES</em>. Elle garantit la double validation analytique, la traçabilité intégrale des sources publiques mobilisées, et le respect strict de la charte déontologique du cabinet. C'est notre signature : un livrable défendable devant un préfet, une commission d'enquête, un conseil de surveillance.
@@ -1694,10 +1697,11 @@
 <!-- QUICK-NAV mobile/tablette -->
 <nav class="quick-nav" id="quick-nav" aria-label="Navigation rapide">
   <button class="quick-nav-btn active" data-target="hero" data-i18n="qnHome">Accueil</button>
-  <button class="quick-nav-btn" data-target="probleme" data-i18n="navProbleme">Constat</button>
-  <button class="quick-nav-btn" data-target="modules" data-i18n="navModules">Modules</button>
-  <button class="quick-nav-btn" data-target="pricing" data-i18n="navPricing">Formules</button>
-  <button class="quick-nav-btn" data-target="certification" data-i18n="navCert">Certification</button>
+  <button class="quick-nav-btn" data-target="probleme" data-i18n="navProbleme">Le constat</button>
+  <button class="quick-nav-btn" data-target="modules" data-i18n="navModules">La plateforme</button>
+  <button class="quick-nav-btn" data-target="pricing" data-i18n="navPricing">Tarification</button>
+  <button class="quick-nav-btn" data-target="pourquoi" data-i18n="navWhy">Différenciation</button>
+  <button class="quick-nav-btn" data-target="certification" data-i18n="navCert">La Certification</button>
   <button class="quick-nav-btn" data-target="contact" data-i18n="qnContact">Contact</button>
 </nav>
 
@@ -1846,22 +1850,23 @@
   // ============================================================
   const T = {
     fr: {
-      navTag:'Intelligence Territoriale', navProbleme:'Constat', navModules:'Modules',
-      navPricing:'Formules', navCert:'Certification', navContact:'Prendre contact',
+      navTag:'Intelligence Territoriale',
+      navProbleme:'Le constat', navModules:'La plateforme', navPricing:'Tarification',
+      navWhy:'Différenciation', navCert:'La Certification', navContact:'Prendre contact',
       heroEyebrow:'Intelligence territoriale française — Édition 2026',
       heroAcronym:'<strong>A</strong>nalyse &nbsp;·&nbsp; <strong>R</strong>enseignement &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/><strong>É</strong>conomique &nbsp;·&nbsp; <strong>S</strong>tratégique',
       heroHeadline:'Là où la donnée publique reste muette, ARIES traduit le territoire en <em>décision stratégique</em>',
       heroCta1:'Découvrir la plateforme', heroCta2:'Demander un dossier',
       heroLabel1:'Couverture', heroLabel2:'Sources publiques agrégées',
       heroLabel3:'Mise à jour', heroVal1:'34 967 communes', heroVal2:'127 flux normalisés', heroVal3:'Cycles trimestriels',
-      probEyebrow:'01 — Le constat',
+      probEyebrow:'Le constat',
       probTitle:'Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.',
       probLede:"La France publie chaque année des milliers de jeux de données sur ses territoires : finances locales, marchés publics, schémas de cohérence, indicateurs INSEE, registres fonciers. Aucun acteur économique ne peut les exploiter dans la durée — l'information existe, mais elle reste inerte.",
       probQuote:'Le décideur économique français travaille à l\'aveugle sur des territoires <span class="accent">où tout est pourtant déjà documenté.</span> ARIES restitue le signal.',
-      modEyebrow:'02 — La plateforme',
+      modEyebrow:'La plateforme',
       modTitle:'Six modules,<br/>une seule <em>lecture du territoire.</em>',
       modLede:"Chaque module d'ARIES répond à une question stratégique précise. Les six convergent en un dossier territorial unifié, livré sous format institutionnel — note de synthèse, fiche scoring, cartographie commentée.",
-      priceEyebrow:'03 — Tarification',
+      priceEyebrow:'Tarification',
       priceTitle:'Nos <em>formules,</em><br/>du rapport ponctuel à l\'institutionnel.',
       priceLede:'Chaque formule est calibrée pour un usage précis. Aucun crédit, aucune métrique opaque : un périmètre, un volume de rapports, un horizon d\'engagement clair.',
       price1Kind:'Ponctuel', price1Commit:'Sans engagement', price1Target:"Décideur ponctuel cherchant une analyse territoriale unique, à la demande.",
@@ -1873,7 +1878,7 @@
       price4Kind:'Institutionnel', price4Price:'Sur devis', price4Commit:'Plancher 8 000 € / mois', price4Target:"Collectivités, fonds et grands groupes opérant à l'échelle nationale.",
       price4f1:'Rapports illimités', price4f2:'Accès API data ARIES', price4f3:'Scoring en marque blanche', price4f4:'Account manager dédié', price4f5:'Missions de conseil incluses', price4Cta:'Nous contacter',
       priceNote:'Tarification définitive à venir — positionnement ultra-premium.',
-      whyEyebrow:'04 — Différenciation',
+      whyEyebrow:'Différenciation',
       whyTitle:"Pourquoi ARIES,<br/>plutôt qu'<em>une étude de cabinet.</em>",
       whyLede:'Trois engagements structurels qui nous séparent des prestations classiques de conseil et des outils de data brute.',
       why1Num:'i — Indépendance', why1Title:'<em>Indépendance</em> documentée.',
@@ -1882,7 +1887,7 @@
       why2Text:"Là où un cabinet livre une photographie figée, ARIES suit le territoire dans la durée. Chaque rapport s'inscrit dans une trajectoire — utile, comparable, vérifiable trimestre après trimestre.",
       why3Num:'iii — Lecture', why3Title:'Lecture <em>institutionnelle.</em>',
       why3Text:"Nos livrables adoptent le format des notes ministérielles et préfectorales. Ils circulent sans traduction dans les comités de direction, les conseils d'administration et les cabinets d'exécutifs.",
-      certEyebrow:'05 — Gage de rigueur', certLabel:'Certification ARIES · 2026',
+      certEyebrow:'La Certification', certLabel:'Certification ARIES · 2026',
       certTitle:'La <em>Certification ARIES™</em> — un standard de méthode.',
       certText:"Chaque rapport publié porte la mention <em>Certifié ARIES</em>. Elle garantit la double validation analytique, la traçabilité intégrale des sources publiques mobilisées, et le respect strict de la charte déontologique du cabinet. C'est notre signature : un livrable défendable devant un préfet, une commission d'enquête, un conseil de surveillance.",
       certTag1:'Double signature analyste', certTag2:'Source traçable', certTag3:'Données souveraines', certTag4:'Charte déontologique',
@@ -1916,22 +1921,23 @@
       mod6Meta:"— L'avantage compétitif rendu visible.",
     },
     en: {
-      navTag:'Territorial Intelligence', navProbleme:'Overview', navModules:'Modules',
-      navPricing:'Pricing', navCert:'Certification', navContact:'Get in touch',
+      navTag:'Territorial Intelligence',
+      navProbleme:'The overview', navModules:'The platform', navPricing:'Pricing',
+      navWhy:'Differentiation', navCert:'Certification', navContact:'Get in touch',
       heroEyebrow:'French Territorial Intelligence — 2026 Edition',
       heroAcronym:'<strong>A</strong>nalysis &nbsp;·&nbsp; <strong>R</strong>esearch &nbsp;·&nbsp; <strong>I</strong>ntelligence<br/><strong>E</strong>conomic &nbsp;·&nbsp; <strong>S</strong>trategic',
       heroHeadline:'Where public data stays silent, ARIES turns territory into <em>strategic decisions</em>',
       heroCta1:'Discover the platform', heroCta2:'Request a briefing',
       heroLabel1:'Coverage', heroLabel2:'Aggregated public sources',
       heroLabel3:'Update cycle', heroVal1:'34,967 municipalities', heroVal2:'127 normalised feeds', heroVal3:'Quarterly cycles',
-      probEyebrow:'01 — The challenge',
+      probEyebrow:'The overview',
       probTitle:'An <em>abundant</em> public dataset,<br/>but never readable.',
       probLede:'France publishes thousands of territorial datasets each year: local finances, public procurement, urban planning, INSEE indicators, land registries. No economic actor can exploit them over time — the information exists, but remains inert.',
       probQuote:'French economic decision-makers work blind on territories <span class="accent">where everything is already documented.</span> ARIES restores the signal.',
-      modEyebrow:'02 — The platform',
+      modEyebrow:'The platform',
       modTitle:'Six modules,<br/>one unified <em>territorial view.</em>',
       modLede:'Each ARIES module answers a precise strategic question. The six converge into a unified territorial dossier, delivered in institutional format — executive summary, scoring sheet, annotated mapping.',
-      priceEyebrow:'03 — Pricing',
+      priceEyebrow:'Pricing',
       priceTitle:'Our <em>plans,</em><br/>from a single report to enterprise.',
       priceLede:'Each plan is calibrated for a specific use. No credits, no opaque metrics: one scope, one report volume, one clear commitment horizon.',
       price1Kind:'One-off', price1Commit:'No commitment', price1Target:'Occasional decision-maker seeking a one-time territorial analysis, on demand.',
@@ -1943,7 +1949,7 @@
       price4Kind:'Enterprise', price4Price:'Custom quote', price4Commit:'Floor price €8,000 / month', price4Target:'Local authorities, funds and large groups operating at national scale.',
       price4f1:'Unlimited reports', price4f2:'ARIES data API access', price4f3:'White-label scoring', price4f4:'Dedicated account manager', price4f5:'Advisory missions included', price4Cta:'Contact us',
       priceNote:'Final pricing to be confirmed — ultra-premium positioning.',
-      whyEyebrow:'04 — Differentiation',
+      whyEyebrow:'Differentiation',
       whyTitle:'Why ARIES,<br/>rather than <em>a consulting study.</em>',
       whyLede:'Three structural commitments that set us apart from traditional consulting and raw data tools.',
       why1Num:'i — Independence', why1Title:'Documented <em>independence.</em>',
@@ -1952,7 +1958,7 @@
       why2Text:'Where a consultancy delivers a frozen snapshot, ARIES tracks the territory over time. Each report is part of a trajectory — useful, comparable, verifiable quarter after quarter.',
       why3Num:'iii — Format', why3Title:'<em>Institutional</em> format.',
       why3Text:'Our deliverables adopt the format of ministerial and prefectural notes. They circulate without translation in management committees, boards of directors, and executive offices.',
-      certEyebrow:'05 — Quality standard', certLabel:'ARIES Certification · 2026',
+      certEyebrow:'Certification', certLabel:'ARIES Certification · 2026',
       certTitle:'The <em>ARIES™ Certification</em> — a methodological standard.',
       certText:"Every published report bears the <em>ARIES Certified</em> mark. It guarantees dual analytical validation, full traceability of public sources, and strict compliance with the firm's ethical charter. Our signature: a deliverable defensible before a prefect, an inquiry commission, or a supervisory board.",
       certTag1:'Dual analyst signature', certTag2:'Traceable source', certTag3:'Sovereign data', certTag4:'Ethics charter',
@@ -2145,7 +2151,7 @@
 
   // Scroll-spy : surligne la section active
   if ('IntersectionObserver' in window) {
-    const sectionIds = ['hero', 'probleme', 'modules', 'pricing', 'certification', 'contact'];
+    const sectionIds = ['hero', 'probleme', 'modules', 'pricing', 'pourquoi', 'certification', 'contact'];
     const spy = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
