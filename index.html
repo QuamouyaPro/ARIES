@@ -410,74 +410,154 @@
     line-height: 1.6;
   }
 
-  /* MODULES — 1px gap on white 7% bg */
-  .modules-shell {
-    background: rgba(255, 255, 255, 0.07);
+  /* ═══════════ MODULES — Index éditorial interactif ═══════════
+     Desktop : liste d'onglets (gauche) + scène détaillée (droite)
+     Mobile  : accordéon plein écran
+  ═══════════════════════════════════════════════════════════════ */
+  .modules-display {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1px;
-    border: 1px solid var(--line);
+    grid-template-columns: 0.82fr 1.18fr;
+    border-top: 1px solid var(--line);
   }
-  .module {
-    grid-column: span 2;
-    background: var(--bg);
-    padding: 48px 36px 44px;
-    transition: background 400ms var(--ease);
-    min-height: 320px;
+
+  /* — Colonne gauche : index des onglets — */
+  .modules-index {
     display: flex;
     flex-direction: column;
+    border-right: 1px solid var(--line);
   }
-  .module:nth-child(1),
-  .module:nth-child(2) { grid-column: span 3; }
-  .module:hover { background: var(--surface-2); }
-  .module:hover .module-line { background: var(--accent); width: 48px; }
-
-  .module-line {
-    width: 24px;
-    height: 2px;
-    background: var(--ink-mute);
-    margin-bottom: 28px;
-    transition: all 500ms var(--ease);
+  .module-tab {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    cursor: pointer;
+    padding: 26px 32px 26px 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    transition: padding-left 450ms var(--ease);
+    width: 100%;
+    font-family: inherit;
   }
-  .module-num {
+  .module-tab::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    bottom: -1px;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 450ms var(--ease);
+  }
+  .module-tab.active { padding-left: 24px; }
+  .module-tab.active::before { transform: scaleY(1); }
+  .module-tab-num {
     font-family: 'Geist', sans-serif;
     font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     color: var(--ink-mute);
-    margin-bottom: 8px;
+    transition: color 400ms var(--ease);
+    flex-shrink: 0;
   }
-  .module-name {
+  .module-tab.active .module-tab-num { color: var(--accent); }
+  .module-tab-name {
     font-family: 'Instrument Serif', serif;
-    font-size: 38px;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+    transition: color 400ms var(--ease);
+    flex: 1;
+    line-height: 1;
+  }
+  .module-tab.active .module-tab-name,
+  .module-tab:hover .module-tab-name { color: var(--ink); }
+  .module-tab-dot {
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 400ms var(--ease), transform 400ms var(--ease);
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+  .module-tab.active .module-tab-dot { opacity: 1; transform: scale(1); }
+
+  /* — Colonne droite : scène détaillée — */
+  .modules-stage {
+    position: relative;
+    padding: 56px 0 56px 64px;
+    min-height: 440px;
+  }
+  .module-panel {
+    position: absolute;
+    inset: 56px 0 56px 64px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(14px);
+    pointer-events: none;
+    transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+  }
+  .module-panel.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .module-panel-watermark {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(80px, 9vw, 130px);
+    line-height: 0.8;
+    color: var(--surface-2);
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+    user-select: none;
+  }
+  .module-panel-watermark .pn { color: var(--accent); opacity: 0.5; }
+  .module-panel-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(40px, 4.5vw, 60px);
     font-weight: 400;
     color: var(--ink);
-    margin-bottom: 6px;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    line-height: 1;
+    margin-bottom: 14px;
   }
-  .module-tagline {
-    font-style: italic;
+  .module-panel-tagline {
     font-family: 'Instrument Serif', serif;
-    font-size: 15px;
+    font-style: italic;
+    font-size: 19px;
     color: var(--accent);
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
-  .module-desc {
-    font-size: 14px;
-    line-height: 1.65;
+  .module-panel-desc {
+    font-size: 16px;
+    line-height: 1.7;
     color: var(--ink-soft);
-    margin-bottom: 24px;
-    max-width: 42ch;
-    flex-grow: 1;
+    max-width: 52ch;
+    margin-bottom: auto;
   }
-  .module-meta {
+  .module-panel-meta {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--ink-mute);
     border-top: 1px solid var(--line);
-    padding-top: 18px;
+    padding-top: 22px;
+    margin-top: 40px;
   }
+
+  /* — Le chevron de l'accordéon mobile (caché en desktop) — */
+  .module-tab-chevron { display: none; }
+  .module-accordion-body { display: contents; }
 
   /* OFFRES */
   .offres-shell {
@@ -861,15 +941,16 @@
     .section-head      { grid-template-columns: 1fr; gap: 24px; }
     .problem-grid      { grid-template-columns: 1fr; gap: 56px; }
     .cert-inner        { grid-template-columns: 1fr; gap: 48px; }
-    .modules-shell     { grid-template-columns: repeat(2, 1fr); }
     .offres-shell      { grid-template-columns: repeat(2, 1fr); }
     .pourquoi-grid     { grid-template-columns: repeat(2, 1fr); gap: 40px; }
     .footer-grid       { grid-template-columns: 1fr 1fr; gap: 40px; }
 
-    /* Modules : retirer les spans asymétriques */
-    .module,
-    .module:nth-child(1),
-    .module:nth-child(2) { grid-column: span 1; }
+    /* Modules : resserrer la colonne index */
+    .modules-display { grid-template-columns: 0.9fr 1.1fr; }
+    .module-tab-name { font-size: 26px; }
+    .module-tab { padding: 22px 24px 22px 0; }
+    .modules-stage, .module-panel { padding-left: 44px; }
+    .module-panel { inset: 56px 0 56px 44px; }
 
     /* Hero meta : passe en ligne horizontale */
     .hero-meta {
@@ -909,6 +990,48 @@
 
     /* Pricing : featured badge repositionné */
     .offre--featured { border-top-width: 2px; padding-top: 44px; }
+
+    /* MODULES → onglets horizontaux scrollables + panneau dessous */
+    .modules-display { display: block; border-top: none; }
+    .modules-index {
+      flex-direction: row;
+      overflow-x: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      gap: 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .modules-index::-webkit-scrollbar { display: none; }
+    .module-tab {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 16px 20px;
+      border-bottom: none;
+      border-right: 1px solid var(--line);
+      white-space: nowrap;
+      min-width: max-content;
+    }
+    .module-tab.active { padding-left: 20px; }
+    .module-tab::before {
+      top: auto; bottom: 0; left: 0; right: 0;
+      width: auto; height: 2px;
+      transform: scaleX(0); transform-origin: left;
+    }
+    .module-tab.active::before { transform: scaleX(1); }
+    .module-tab-name { font-size: 21px; }
+    .module-tab-dot { display: none; }
+    .module-tab-num { letter-spacing: 0.14em; }
+    .modules-stage { position: relative; padding: 36px 0 0; min-height: 0; }
+    .module-panel {
+      position: relative; inset: auto;
+      display: none; opacity: 1; transform: none;
+      pointer-events: auto;
+    }
+    .module-panel.active { display: flex; }
+    .module-panel-watermark { font-size: 68px; margin-bottom: 20px; }
+    .module-panel-meta { margin-top: 28px; }
   }
 
   /* — Mobile XS (< 480px) ───────────────────────────── */
@@ -918,13 +1041,17 @@
     .container { padding: 0 18px; }
 
     /* Grilles → forcer 1 colonne */
-    .modules-shell { grid-template-columns: 1fr; }
     .offres-shell  { grid-template-columns: 1fr; }
 
     /* Réduire les paddings internes */
-    .module { padding: 28px 20px; min-height: auto; }
     .offre  { padding: 32px 20px; min-height: auto; }
     .cert-inner { padding: 44px 20px; }
+
+    /* Modules : onglets plus compacts */
+    .module-tab { padding: 14px 16px; }
+    .module-tab-name { font-size: 19px; }
+    .module-panel-name { font-size: 38px; }
+    .module-panel-desc { font-size: 15px; }
     .footer-brand { font-size: 38px; }
     .footer-grid { gap: 28px; }
 
@@ -953,6 +1080,57 @@
     .mobile-menu { padding-top: 68px; padding-bottom: 16px; }
     .mobile-menu-links a { padding: 10px 0; font-size: clamp(24px, 6vw, 36px); }
     .mobile-bottom { padding-top: 16px; gap: 10px; }
+  }
+
+  /* ═══════════ QUICK-NAV — barre d'onglets mobile/tablette ═══════════
+     Sélecteur de section flottant en bas, pour naviguer sans scroller.
+  ════════════════════════════════════════════════════════════════════ */
+  .quick-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    z-index: 56;
+    display: none;
+    align-items: center;
+    gap: 2px;
+    padding: 5px;
+    background: rgba(17, 17, 17, 0.82);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    border: 1px solid var(--line);
+    max-width: calc(100vw - 28px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    opacity: 0;
+    transition: transform 500ms var(--ease), opacity 400ms var(--ease);
+  }
+  .quick-nav::-webkit-scrollbar { display: none; }
+  .quick-nav.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .quick-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--ink-mute);
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 11px 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 300ms var(--ease), background 300ms var(--ease);
+    line-height: 1;
+  }
+  .quick-nav-btn.active { background: var(--accent); color: #fff; }
+  .quick-nav-btn:not(.active):hover { color: var(--ink); }
+
+  @media (max-width: 1024px) {
+    .quick-nav { display: flex; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quick-nav { transition: none; }
   }
 
   /* ── LANG TOGGLE ─────────────────────────────────── */
@@ -1157,7 +1335,7 @@
 <main>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-glow"></div>
     <div class="container">
       <div class="hero-grid">
@@ -1185,11 +1363,11 @@
         <aside class="hero-meta">
           <div class="hero-meta-item">
             <div class="label" data-i18n="heroLabel1">Couverture</div>
-            <div class="value">34 967 communes</div>
+            <div class="value" data-i18n="heroVal1">34 967 communes</div>
           </div>
           <div class="hero-meta-item">
             <div class="label" data-i18n="heroLabel2">Sources publiques agrégées</div>
-            <div class="value">127 flux normalisés</div>
+            <div class="value" data-i18n="heroVal2">127 flux normalisés</div>
           </div>
           <div class="hero-meta-item">
             <div class="label" data-i18n="heroLabel3">Mise à jour</div>
@@ -1225,15 +1403,15 @@
         <div class="problem-stats reveal" style="--delay: 150ms;">
           <div class="problem-stat">
             <div class="problem-stat-num">38<span class="unit">%</span></div>
-            <div class="problem-stat-text">des implantations économiques en France échouent dans les cinq ans, faute d'analyse territoriale en amont.</div>
+            <div class="problem-stat-text" data-i18n="stat1">des implantations économiques en France échouent dans les cinq ans, faute d'analyse territoriale en amont.</div>
           </div>
           <div class="problem-stat">
             <div class="problem-stat-num">9<span class="unit">/10</span></div>
-            <div class="problem-stat-text">collectivités ne disposent d'aucun scoring extérieur indépendant de leur trajectoire économique.</div>
+            <div class="problem-stat-text" data-i18n="stat2">collectivités ne disposent d'aucun scoring extérieur indépendant de leur trajectoire économique.</div>
           </div>
           <div class="problem-stat">
             <div class="problem-stat-num">2,4<span class="unit">k</span></div>
-            <div class="problem-stat-text">appels à projets publics par an, fragmentés entre 14 plateformes administratives distinctes.</div>
+            <div class="problem-stat-text" data-i18n="stat3">appels à projets publics par an, fragmentés entre 14 plateformes administratives distinctes.</div>
           </div>
         </div>
       </div>
@@ -1255,72 +1433,92 @@
         </p>
       </div>
 
-      <div class="modules-shell reveal">
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">i — Score</div>
-          <h3 class="module-name">Score</h3>
-          <div class="module-tagline">Notation comparative des territoires</div>
-          <p class="module-desc">
-            Indice propriétaire combinant trajectoire fiscale, dynamisme démographique, tension foncière et solidité de la gouvernance. Comparaison instantanée entre communes, EPCI et bassins d'emploi.
-          </p>
-          <div class="module-meta">— Pour les directions de l'implantation et l'investissement public.</div>
-        </article>
+      <div class="modules-display reveal" id="modules-display">
+        <!-- Index des onglets -->
+        <div class="modules-index" role="tablist">
+          <button class="module-tab active" data-module="0" role="tab" aria-selected="true">
+            <span class="module-tab-num">01</span>
+            <span class="module-tab-name">Score</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+          <button class="module-tab" data-module="1" role="tab" aria-selected="false">
+            <span class="module-tab-num">02</span>
+            <span class="module-tab-name">Insight</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+          <button class="module-tab" data-module="2" role="tab" aria-selected="false">
+            <span class="module-tab-num">03</span>
+            <span class="module-tab-name">Land</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+          <button class="module-tab" data-module="3" role="tab" aria-selected="false">
+            <span class="module-tab-num">04</span>
+            <span class="module-tab-name">Gov</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+          <button class="module-tab" data-module="4" role="tab" aria-selected="false">
+            <span class="module-tab-num">05</span>
+            <span class="module-tab-name">Economic</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+          <button class="module-tab" data-module="5" role="tab" aria-selected="false">
+            <span class="module-tab-num">06</span>
+            <span class="module-tab-name">Synergy</span>
+            <span class="module-tab-dot"></span>
+            <span class="module-tab-chevron">+</span>
+          </button>
+        </div>
 
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">ii — Insight</div>
-          <h3 class="module-name">Insight</h3>
-          <div class="module-tagline">Notes de synthèse stratégique</div>
-          <p class="module-desc">
-            Rapports rédigés par nos analystes territoriaux : lecture politique, lecture économique, lecture concurrentielle. Format note ministérielle, douze à vingt pages, sourcé et opposable.
-          </p>
-          <div class="module-meta">— Le langage commun des directions générales.</div>
-        </article>
-
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">iii — Land</div>
-          <h3 class="module-name">Land</h3>
-          <div class="module-tagline">Opportunités foncières qualifiées</div>
-          <p class="module-desc">
-            Détection des friches industrielles, zones d'activité sous-occupées, terrains constructibles ouverts à l'investissement, croisée avec les contraintes PLU et environnementales.
-          </p>
-          <div class="module-meta">— Cartographie active, mise à jour trimestrielle.</div>
-        </article>
-
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">iv — Gov</div>
-          <h3 class="module-name">Gov</h3>
-          <div class="module-tagline">Lecture politique des collectivités</div>
-          <p class="module-desc">
-            Profilage des exécutifs locaux, lecture des votes de conseil, identification des alignements de mandature. Comprendre qui décide, comment et dans quelle temporalité.
-          </p>
-          <div class="module-meta">— Réservé aux abonnés Stratégique et au-delà.</div>
-        </article>
-
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">v — Economic</div>
-          <h3 class="module-name">Economic</h3>
-          <div class="module-tagline">Veille des appels à projets</div>
-          <p class="module-desc">
-            Agrégation et qualification des aides publiques, dispositifs France Relance, appels d'offres européens et régionaux. Tri par éligibilité, calendrier, ratio effort/retour.
-          </p>
-          <div class="module-meta">— 2 400 dispositifs suivis en continu.</div>
-        </article>
-
-        <article class="module">
-          <div class="module-line"></div>
-          <div class="module-num">vi — Synergy</div>
-          <h3 class="module-name">Synergy</h3>
-          <div class="module-tagline">Cartographie des écosystèmes</div>
-          <p class="module-desc">
-            Identification des chaînes de valeur locales, des relations donneur d'ordre / sous-traitant, des cluster de compétences. Lecture des synergies entre acteurs privés et opérateurs publics.
-          </p>
-          <div class="module-meta">— L'avantage compétitif rendu visible.</div>
-        </article>
+        <!-- Scène détaillée -->
+        <div class="modules-stage">
+          <div class="module-panel active" data-panel="0">
+            <div class="module-panel-watermark"><span class="pn">0</span>1</div>
+            <h3 class="module-panel-name">Score</h3>
+            <div class="module-panel-tagline" data-i18n="mod1Tag">Notation comparative des territoires</div>
+            <p class="module-panel-desc" data-i18n="mod1Desc">Indice propriétaire combinant trajectoire fiscale, dynamisme démographique, tension foncière et solidité de la gouvernance. Comparaison instantanée entre communes, EPCI et bassins d'emploi.</p>
+            <div class="module-panel-meta" data-i18n="mod1Meta">— Pour les directions de l'implantation et l'investissement public.</div>
+          </div>
+          <div class="module-panel" data-panel="1">
+            <div class="module-panel-watermark"><span class="pn">0</span>2</div>
+            <h3 class="module-panel-name">Insight</h3>
+            <div class="module-panel-tagline" data-i18n="mod2Tag">Notes de synthèse stratégique</div>
+            <p class="module-panel-desc" data-i18n="mod2Desc">Rapports rédigés par nos analystes territoriaux : lecture politique, lecture économique, lecture concurrentielle. Format note ministérielle, douze à vingt pages, sourcé et opposable.</p>
+            <div class="module-panel-meta" data-i18n="mod2Meta">— Le langage commun des directions générales.</div>
+          </div>
+          <div class="module-panel" data-panel="2">
+            <div class="module-panel-watermark"><span class="pn">0</span>3</div>
+            <h3 class="module-panel-name">Land</h3>
+            <div class="module-panel-tagline" data-i18n="mod3Tag">Opportunités foncières qualifiées</div>
+            <p class="module-panel-desc" data-i18n="mod3Desc">Détection des friches industrielles, zones d'activité sous-occupées, terrains constructibles ouverts à l'investissement, croisée avec les contraintes PLU et environnementales.</p>
+            <div class="module-panel-meta" data-i18n="mod3Meta">— Cartographie active, mise à jour trimestrielle.</div>
+          </div>
+          <div class="module-panel" data-panel="3">
+            <div class="module-panel-watermark"><span class="pn">0</span>4</div>
+            <h3 class="module-panel-name">Gov</h3>
+            <div class="module-panel-tagline" data-i18n="mod4Tag">Lecture politique des collectivités</div>
+            <p class="module-panel-desc" data-i18n="mod4Desc">Profilage des exécutifs locaux, lecture des votes de conseil, identification des alignements de mandature. Comprendre qui décide, comment et dans quelle temporalité.</p>
+            <div class="module-panel-meta" data-i18n="mod4Meta">— Réservé aux abonnés Stratégique et au-delà.</div>
+          </div>
+          <div class="module-panel" data-panel="4">
+            <div class="module-panel-watermark"><span class="pn">0</span>5</div>
+            <h3 class="module-panel-name">Economic</h3>
+            <div class="module-panel-tagline" data-i18n="mod5Tag">Veille des appels à projets</div>
+            <p class="module-panel-desc" data-i18n="mod5Desc">Agrégation et qualification des aides publiques, dispositifs France Relance, appels d'offres européens et régionaux. Tri par éligibilité, calendrier, ratio effort/retour.</p>
+            <div class="module-panel-meta" data-i18n="mod5Meta">— 2 400 dispositifs suivis en continu.</div>
+          </div>
+          <div class="module-panel" data-panel="5">
+            <div class="module-panel-watermark"><span class="pn">0</span>6</div>
+            <h3 class="module-panel-name">Synergy</h3>
+            <div class="module-panel-tagline" data-i18n="mod6Tag">Cartographie des écosystèmes</div>
+            <p class="module-panel-desc" data-i18n="mod6Desc">Identification des chaînes de valeur locales, des relations donneur d'ordre / sous-traitant, des clusters de compétences. Lecture des synergies entre acteurs privés et opérateurs publics.</p>
+            <div class="module-panel-meta" data-i18n="mod6Meta">— L'avantage compétitif rendu visible.</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1344,7 +1542,7 @@
         <article class="offre">
           <div class="offre-kind" data-i18n="price1Kind">Ponctuel</div>
           <h3 class="offre-name">À la carte</h3>
-          <div class="offre-price">790 €<span class="unit"> / rapport</span></div>
+          <div class="offre-price">790 €<span class="unit" data-i18n="unitReport"> / rapport</span></div>
           <div class="offre-commit" data-i18n="price1Commit">Sans engagement</div>
           <p class="offre-target" data-i18n="price1Target">Décideur ponctuel cherchant une analyse territoriale unique, à la demande.</p>
           <ul class="offre-list">
@@ -1362,7 +1560,7 @@
         <article class="offre">
           <div class="offre-kind" data-i18n="price2Kind">Abonnement</div>
           <h3 class="offre-name">Basic</h3>
-          <div class="offre-price">590 €<span class="unit"> / mois</span></div>
+          <div class="offre-price">590 €<span class="unit" data-i18n="unitMonth"> / mois</span></div>
           <div class="offre-commit" data-i18n="price2Commit">Engagement 12 mois</div>
           <p class="offre-target" data-i18n="price2Target">TPE et porteurs de projet suivant un territoire dans la durée.</p>
           <ul class="offre-list">
@@ -1381,7 +1579,7 @@
           <div class="offre-badge" data-i18n="price3Badge">Recommandé</div>
           <div class="offre-kind" data-i18n="price3Kind">Premium</div>
           <h3 class="offre-name">Premium</h3>
-          <div class="offre-price">1 900 €<span class="unit"> / mois</span></div>
+          <div class="offre-price">1 900 €<span class="unit" data-i18n="unitMonth"> / mois</span></div>
           <div class="offre-commit" data-i18n="price3Commit">Engagement 12 mois</div>
           <p class="offre-target" data-i18n="price3Target">PME, cabinets et investisseurs pilotant un portefeuille de territoires.</p>
           <ul class="offre-list">
@@ -1493,6 +1691,16 @@
 
 </main>
 
+<!-- QUICK-NAV mobile/tablette -->
+<nav class="quick-nav" id="quick-nav" aria-label="Navigation rapide">
+  <button class="quick-nav-btn active" data-target="hero" data-i18n="qnHome">Accueil</button>
+  <button class="quick-nav-btn" data-target="probleme" data-i18n="navProbleme">Constat</button>
+  <button class="quick-nav-btn" data-target="modules" data-i18n="navModules">Modules</button>
+  <button class="quick-nav-btn" data-target="pricing" data-i18n="navPricing">Formules</button>
+  <button class="quick-nav-btn" data-target="certification" data-i18n="navCert">Certification</button>
+  <button class="quick-nav-btn" data-target="contact" data-i18n="qnContact">Contact</button>
+</nav>
+
 <footer id="contact">
   <div class="container">
     <div class="footer-grid">
@@ -1505,21 +1713,21 @@
       </div>
       <div class="footer-col reveal" style="--delay: 150ms;">
         <h4 data-i18n="footCol1">Plateforme</h4>
-        <a href="#modules">Modules</a>
-        <a href="#pricing">Formules</a>
-        <a href="#certification">Certification</a>
-        <a href="#probleme">Méthode</a>
+        <a href="#modules" data-i18n="navModules">Modules</a>
+        <a href="#pricing" data-i18n="navPricing">Formules</a>
+        <a href="#certification" data-i18n="navCert">Certification</a>
+        <a href="#probleme" data-i18n="footMethode">Méthode</a>
       </div>
       <div class="footer-col reveal" style="--delay: 200ms;">
         <h4 data-i18n="footCol2">Contact</h4>
         <p>cabinet@aries-intelligence.fr</p>
         <p>+33 (0)1 47 03 28 14</p>
-        <p>17 rue de Solférino<br/>75007 Paris</p>
+        <p data-i18n-html="footAddr">17 rue de Solférino<br/>75007 Paris</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 ARIES Intelligence Territoriale — Tous droits réservés.</p>
-      <p>Mentions légales · Charte déontologique · Confidentialité</p>
+      <p data-i18n="footRights">© 2026 ARIES Intelligence Territoriale — Tous droits réservés.</p>
+      <p data-i18n="footLegal">Mentions légales · Charte déontologique · Confidentialité</p>
     </div>
   </div>
 </footer>
@@ -1645,7 +1853,7 @@
       heroHeadline:'Là où la donnée publique reste muette, ARIES traduit le territoire en <em>décision stratégique</em>',
       heroCta1:'Découvrir la plateforme', heroCta2:'Demander un dossier',
       heroLabel1:'Couverture', heroLabel2:'Sources publiques agrégées',
-      heroLabel3:'Mise à jour', heroVal3:'Cycles trimestriels',
+      heroLabel3:'Mise à jour', heroVal1:'34 967 communes', heroVal2:'127 flux normalisés', heroVal3:'Cycles trimestriels',
       probEyebrow:'01 — Le constat',
       probTitle:'Une donnée publique <em>abondante</em>,<br/>mais jamais lisible.',
       probLede:"La France publie chaque année des milliers de jeux de données sur ses territoires : finances locales, marchés publics, schémas de cohérence, indicateurs INSEE, registres fonciers. Aucun acteur économique ne peut les exploiter dans la durée — l'information existe, mais elle reste inerte.",
@@ -1680,6 +1888,32 @@
       certTag1:'Double signature analyste', certTag2:'Source traçable', certTag3:'Données souveraines', certTag4:'Charte déontologique',
       footAcronym:'<strong>A</strong>nalyse · <strong>R</strong>enseignement · <strong>I</strong>ntelligence<br/><strong>É</strong>conomique · <strong>S</strong>tratégique',
       footCol1:'Plateforme', footCol2:'Contact',
+      qnHome:'Accueil', qnContact:'Contact',
+      footMethode:'Méthode', footAddr:'17 rue de Solférino<br/>75007 Paris',
+      footRights:'© 2026 ARIES Intelligence Territoriale — Tous droits réservés.',
+      footLegal:'Mentions légales · Charte déontologique · Confidentialité',
+      stat1:"des implantations économiques en France échouent dans les cinq ans, faute d'analyse territoriale en amont.",
+      stat2:"collectivités ne disposent d'aucun scoring extérieur indépendant de leur trajectoire économique.",
+      stat3:'appels à projets publics par an, fragmentés entre 14 plateformes administratives distinctes.',
+      unitReport:' / rapport', unitMonth:' / mois',
+      mod1Tag:'Notation comparative des territoires',
+      mod1Desc:"Indice propriétaire combinant trajectoire fiscale, dynamisme démographique, tension foncière et solidité de la gouvernance. Comparaison instantanée entre communes, EPCI et bassins d'emploi.",
+      mod1Meta:"— Pour les directions de l'implantation et l'investissement public.",
+      mod2Tag:'Notes de synthèse stratégique',
+      mod2Desc:'Rapports rédigés par nos analystes territoriaux : lecture politique, lecture économique, lecture concurrentielle. Format note ministérielle, douze à vingt pages, sourcé et opposable.',
+      mod2Meta:'— Le langage commun des directions générales.',
+      mod3Tag:'Opportunités foncières qualifiées',
+      mod3Desc:"Détection des friches industrielles, zones d'activité sous-occupées, terrains constructibles ouverts à l'investissement, croisée avec les contraintes PLU et environnementales.",
+      mod3Meta:'— Cartographie active, mise à jour trimestrielle.',
+      mod4Tag:'Lecture politique des collectivités',
+      mod4Desc:'Profilage des exécutifs locaux, lecture des votes de conseil, identification des alignements de mandature. Comprendre qui décide, comment et dans quelle temporalité.',
+      mod4Meta:'— Réservé aux abonnés Stratégique et au-delà.',
+      mod5Tag:'Veille des appels à projets',
+      mod5Desc:"Agrégation et qualification des aides publiques, dispositifs France Relance, appels d'offres européens et régionaux. Tri par éligibilité, calendrier, ratio effort/retour.",
+      mod5Meta:'— 2 400 dispositifs suivis en continu.',
+      mod6Tag:'Cartographie des écosystèmes',
+      mod6Desc:'Identification des chaînes de valeur locales, des relations donneur d\'ordre / sous-traitant, des clusters de compétences. Lecture des synergies entre acteurs privés et opérateurs publics.',
+      mod6Meta:"— L'avantage compétitif rendu visible.",
     },
     en: {
       navTag:'Territorial Intelligence', navProbleme:'Overview', navModules:'Modules',
@@ -1689,7 +1923,7 @@
       heroHeadline:'Where public data stays silent, ARIES turns territory into <em>strategic decisions</em>',
       heroCta1:'Discover the platform', heroCta2:'Request a briefing',
       heroLabel1:'Coverage', heroLabel2:'Aggregated public sources',
-      heroLabel3:'Update cycle', heroVal3:'Quarterly cycles',
+      heroLabel3:'Update cycle', heroVal1:'34,967 municipalities', heroVal2:'127 normalised feeds', heroVal3:'Quarterly cycles',
       probEyebrow:'01 — The challenge',
       probTitle:'An <em>abundant</em> public dataset,<br/>but never readable.',
       probLede:'France publishes thousands of territorial datasets each year: local finances, public procurement, urban planning, INSEE indicators, land registries. No economic actor can exploit them over time — the information exists, but remains inert.',
@@ -1724,6 +1958,32 @@
       certTag1:'Dual analyst signature', certTag2:'Traceable source', certTag3:'Sovereign data', certTag4:'Ethics charter',
       footAcronym:'<strong>A</strong>nalysis · <strong>R</strong>esearch · <strong>I</strong>ntelligence<br/><strong>E</strong>conomic · <strong>S</strong>trategic',
       footCol1:'Platform', footCol2:'Contact',
+      qnHome:'Home', qnContact:'Contact',
+      footMethode:'Methodology', footAddr:'17 rue de Solférino<br/>75007 Paris, France',
+      footRights:'© 2026 ARIES Territorial Intelligence — All rights reserved.',
+      footLegal:'Legal notice · Ethics charter · Privacy',
+      stat1:'of economic developments in France fail within five years, for lack of upstream territorial analysis.',
+      stat2:'of local authorities have no independent external scoring of their economic trajectory.',
+      stat3:'public calls for projects per year, fragmented across 14 separate administrative platforms.',
+      unitReport:' / report', unitMonth:' / month',
+      mod1Tag:'Comparative territorial scoring',
+      mod1Desc:'A proprietary index combining fiscal trajectory, demographic momentum, land pressure and governance strength. Instant comparison between municipalities, EPCIs and employment areas.',
+      mod1Meta:'— For development and public investment departments.',
+      mod2Tag:'Strategic executive briefings',
+      mod2Desc:'Reports written by our territorial analysts: political reading, economic reading, competitive reading. Ministerial-note format, twelve to twenty pages, sourced and defensible.',
+      mod2Meta:'— The common language of executive boards.',
+      mod3Tag:'Qualified land opportunities',
+      mod3Desc:'Detection of industrial brownfields, underused business zones and buildable land open to investment, cross-referenced with planning and environmental constraints.',
+      mod3Meta:'— Active mapping, updated quarterly.',
+      mod4Tag:'Political reading of local authorities',
+      mod4Desc:'Profiling of local executives, council vote analysis, identification of mandate alignments. Understand who decides, how, and on what timeline.',
+      mod4Meta:'— Reserved for Premium subscribers and above.',
+      mod5Tag:'Calls-for-projects monitoring',
+      mod5Desc:'Aggregation and qualification of public aid, recovery-plan schemes, European and regional tenders. Sorted by eligibility, schedule and effort/return ratio.',
+      mod5Meta:'— 2,400 schemes tracked continuously.',
+      mod6Tag:'Ecosystem mapping',
+      mod6Desc:'Identification of local value chains, prime-contractor / subcontractor relationships and skill clusters. Reading of synergies between private actors and public operators.',
+      mod6Meta:'— Competitive advantage made visible.',
     }
   };
 
@@ -1818,6 +2078,88 @@
     reveals.forEach((el) => io.observe(el));
   } else {
     reveals.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  // ============================================================
+  // MODULES — index interactif (onglets ↔ panneaux)
+  // ============================================================
+  const moduleTabs = document.querySelectorAll('.module-tab');
+  const modulePanels = document.querySelectorAll('.module-panel');
+
+  function activateModule(idx) {
+    moduleTabs.forEach((tab, i) => {
+      const on = i === idx;
+      tab.classList.toggle('active', on);
+      tab.setAttribute('aria-selected', String(on));
+    });
+    modulePanels.forEach((panel, i) =>
+      panel.classList.toggle('active', i === idx)
+    );
+  }
+
+  moduleTabs.forEach((tab, i) => {
+    // Clic = activer (mobile + desktop)
+    tab.addEventListener('click', () => {
+      activateModule(i);
+      // Sur mobile, faire défiler le panneau dans la vue
+      if (window.innerWidth <= 768) {
+        const stage = document.querySelector('.modules-stage');
+        if (stage) {
+          const top = stage.getBoundingClientRect().top + window.scrollY - 120;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+    });
+    // Survol = activer (desktop seulement, pointer fin)
+    tab.addEventListener('mouseenter', () => {
+      if (window.matchMedia('(pointer: fine)').matches) activateModule(i);
+    });
+  });
+
+  // ============================================================
+  // QUICK-NAV — sélecteur de section mobile/tablette
+  // ============================================================
+  const quickNav = document.getElementById('quick-nav');
+  const quickBtns = document.querySelectorAll('.quick-nav-btn');
+  const heroSection = document.getElementById('hero');
+
+  // Clic = défilement doux vers la section
+  quickBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Afficher la barre après le hero
+  function toggleQuickNav() {
+    if (!heroSection) return;
+    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight - 200;
+    quickNav.classList.toggle('show', window.scrollY > heroBottom * 0.4);
+  }
+  window.addEventListener('scroll', toggleQuickNav, { passive: true });
+  toggleQuickNav();
+
+  // Scroll-spy : surligne la section active
+  if ('IntersectionObserver' in window) {
+    const sectionIds = ['hero', 'probleme', 'modules', 'pricing', 'certification', 'contact'];
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          quickBtns.forEach(b =>
+            b.classList.toggle('active', b.dataset.target === id)
+          );
+        }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) spy.observe(el);
+    });
   }
 </script>
 
