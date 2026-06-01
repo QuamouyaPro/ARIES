@@ -2,7 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>ARIES — Analyse et Renseignement de l'Intelligence Économique et Stratégique</title>
 <meta name="description" content="Plateforme premium d'intelligence territoriale française. Rapports stratégiques sur l'implantation, le foncier, la gouvernance locale et les synergies économiques." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -827,32 +831,128 @@
     transform: translateY(0);
   }
 
-  /* RESPONSIVE */
-  @media (max-width: 1024px) {
-    .hero-grid,
-    .section-head,
-    .problem-grid,
-    .cert-inner {
-      grid-template-columns: 1fr;
-      gap: 48px;
-    }
-    .modules-shell { grid-template-columns: repeat(2, 1fr); }
-    .module, .module:nth-child(1), .module:nth-child(2) { grid-column: span 1; }
-    .offres-shell { grid-template-columns: repeat(2, 1fr); }
-    .pourquoi-grid { grid-template-columns: 1fr; gap: 48px; }
-    .footer-grid { grid-template-columns: 1fr; gap: 48px; }
-    section { padding: 100px 0; }
+  /* ═══════════════════════════════════════════════════════
+     RESPONSIVE — Détection automatique
+     Desktop    > 1024px  → layout complet
+     Tablet     768–1024px → 2 colonnes adaptées
+     Mobile     480–768px → 1 colonne, burger actif
+     Mobile XS  < 480px   → fonts réduits, stacks totaux
+     Landscape  height < 520px → hero compact
+  ═══════════════════════════════════════════════════════ */
+
+  /* — Touch device (téléphone & tablette)
+       Cibles tactiles ≥ 44px (Apple HIG / WCAG 2.5.5)
+       Suppression du highlight natif bleu au tap          */
+  @media (pointer: coarse) {
+    * { -webkit-tap-highlight-color: transparent; }
+    .btn, .nav-cta, .offre-cta, .mobile-cta { min-height: 48px; }
+    .lang-btn, .mobile-lang-btn { min-height: 44px; min-width: 44px; }
+    .burger { min-width: 44px; min-height: 44px; }
+    .module, .offre { cursor: default; }
   }
-  @media (max-width: 640px) {
-    .container { padding: 0 20px; }
-    .modules-shell { grid-template-columns: 1fr; }
-    .offres-shell { grid-template-columns: 1fr; }
-    .cert-inner { padding: 56px 28px; }
-    .footer-brand { font-size: 44px; }
+
+  /* — Tablette (768px → 1024px) ─────────────────────── */
+  @media (max-width: 1024px) {
+    section { padding: 100px 0; }
+    .hero { padding-top: 160px; padding-bottom: 80px; }
+
+    /* Grilles 2 colonnes */
+    .hero-grid         { grid-template-columns: 1fr; gap: 52px; }
+    .section-head      { grid-template-columns: 1fr; gap: 24px; }
+    .problem-grid      { grid-template-columns: 1fr; gap: 56px; }
+    .cert-inner        { grid-template-columns: 1fr; gap: 48px; }
+    .modules-shell     { grid-template-columns: repeat(2, 1fr); }
+    .offres-shell      { grid-template-columns: repeat(2, 1fr); }
+    .pourquoi-grid     { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .footer-grid       { grid-template-columns: 1fr 1fr; gap: 40px; }
+
+    /* Modules : retirer les spans asymétriques */
+    .module,
+    .module:nth-child(1),
+    .module:nth-child(2) { grid-column: span 1; }
+
+    /* Hero meta : passe en ligne horizontale */
+    .hero-meta {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
+    .hero-meta-item { border-top: none; border-bottom: none; padding: 12px 0; }
+
+    /* Certification : seal centré au-dessus */
+    .cert-seal { order: -1; }
+  }
+
+  /* — Mobile (< 768px) ──────────────────────────────── */
+  @media (max-width: 768px) {
     section { padding: 80px 0; }
-    .hero { padding-top: 140px; padding-bottom: 60px; }
-    .module { padding: 36px 28px; min-height: auto; }
-    .offre { padding: 40px 28px; min-height: auto; }
+    .hero { padding-top: 130px; padding-bottom: 64px; }
+    .container { padding: 0 24px; }
+
+    /* Nav : afficher burger, masquer nav desktop */
+    .burger { display: flex; }
+    .nav-links { display: none !important; }
+    .lang-toggle { display: none !important; }
+
+    /* Grilles → 1 colonne */
+    .pourquoi-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-grid   { grid-template-columns: 1fr; gap: 32px; }
+
+    /* Section head : rapprocher */
+    .section-head { margin-bottom: 52px; }
+
+    /* Hero actions : boutons pleine largeur */
+    .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .hero-actions .btn { width: 100%; justify-content: center; }
+
+    /* Pricing : featured badge repositionné */
+    .offre--featured { border-top-width: 2px; padding-top: 44px; }
+  }
+
+  /* — Mobile XS (< 480px) ───────────────────────────── */
+  @media (max-width: 480px) {
+    section { padding: 60px 0; }
+    .hero { padding-top: 112px; padding-bottom: 48px; }
+    .container { padding: 0 18px; }
+
+    /* Grilles → forcer 1 colonne */
+    .modules-shell { grid-template-columns: 1fr; }
+    .offres-shell  { grid-template-columns: 1fr; }
+
+    /* Réduire les paddings internes */
+    .module { padding: 28px 20px; min-height: auto; }
+    .offre  { padding: 32px 20px; min-height: auto; }
+    .cert-inner { padding: 44px 20px; }
+    .footer-brand { font-size: 38px; }
+    .footer-grid { gap: 28px; }
+
+    /* Stats : colonnes plus compactes */
+    .problem-stat { grid-template-columns: 72px 1fr; gap: 16px; }
+    .problem-stat-num { font-size: 40px; }
+
+    /* Nav brand : masquer le tag sur très petit écran */
+    .brand-tag { display: none; }
+
+    /* Section head */
+    .section-head { gap: 20px; margin-bottom: 44px; }
+
+    /* Certification : badge plus petit */
+    .cert-seal-mark { width: 140px; height: 140px; }
+    .cert-seal-inner { font-size: 42px; }
+
+    /* Boutons pricing */
+    .offre-cta { padding: 14px 16px; }
+  }
+
+  /* — Téléphone paysage (hauteur < 520px) ───────────── */
+  @media (max-height: 520px) and (orientation: landscape) {
+    .hero { padding-top: 80px; min-height: auto; padding-bottom: 48px; }
+    .hero-name { font-size: clamp(52px, 14vw, 100px); margin-bottom: 16px; }
+    .mobile-menu { padding-top: 68px; padding-bottom: 16px; }
+    .mobile-menu-links a { padding: 10px 0; font-size: clamp(24px, 6vw, 36px); }
+    .mobile-bottom { padding-top: 16px; gap: 10px; }
   }
 
   /* ── LANG TOGGLE ─────────────────────────────────── */
