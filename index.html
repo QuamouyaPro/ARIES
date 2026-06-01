@@ -59,6 +59,67 @@
     z-index: 0;
   }
 
+  /* ═══════════ AMBIANCE — fond dynamique sobre des sections ═══════════
+     Révélé derrière la vague WebGL quand elle s'estompe. Grille
+     cartographique discrète + halos bleus dérivants. Tons du thème.
+  ═══════════════════════════════════════════════════════════════════════ */
+  #ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.016) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
+    background-size: 68px 68px;
+    background-position: center;
+  }
+  /* Voile dégradé : grille atténuée en haut/bas pour la profondeur */
+  #ambient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 90% 70% at 50% 40%, transparent 30%, var(--bg) 95%);
+  }
+  /* Halos bleus dérivants (radial doux, aucune dépendance au filtre blur) */
+  .ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .ambient-orb--1 {
+    width: 62vw; height: 62vw;
+    top: -16vw; left: -12vw;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.085), transparent 68%);
+    animation: orbDrift1 32s ease-in-out infinite alternate;
+  }
+  .ambient-orb--2 {
+    width: 50vw; height: 50vw;
+    bottom: -18vw; right: -10vw;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.06), transparent 68%);
+    animation: orbDrift2 40s ease-in-out infinite alternate;
+  }
+  .ambient-orb--3 {
+    width: 38vw; height: 38vw;
+    top: 38%; left: 55%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.045), transparent 70%);
+    animation: orbDrift3 46s ease-in-out infinite alternate;
+  }
+  @keyframes orbDrift1 {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(7vw, 11vh, 0); }
+  }
+  @keyframes orbDrift2 {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-9vw, -7vh, 0); }
+  }
+  @keyframes orbDrift3 {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-6vw, 8vh, 0); }
+  }
+
   /* WebGL shader canvas — visible sur le hero, s'estompe au scroll */
   #particles-canvas {
     position: fixed;
@@ -1286,12 +1347,19 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+    .ambient-orb { animation: none !important; }
     [class*="hero-"] { animation: none !important; opacity: 1 !important; }
     * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   }
 </style>
 </head>
 <body>
+
+<div id="ambient" aria-hidden="true">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="ambient-orb ambient-orb--3"></div>
+</div>
 
 <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
