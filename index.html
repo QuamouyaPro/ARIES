@@ -1904,14 +1904,21 @@
 
     let animId = null;
     let running = false;
+    let lastFrame = 0;
 
-    function renderLoop() {
-      uniforms.time.value += 0.003; // vitesse lente, sobre
+    // Boucle pilotée par le TEMPS RÉEL (delta-time) : la vague avance à la
+    // même vitesse à 60, 144 ou 360 Hz, et reste parfaitement fluide à chaque
+    // palier de rafraîchissement. rAF se cale nativement sur le refresh écran.
+    function renderLoop(now) {
+      if (!lastFrame) lastFrame = now;
+      const dt = Math.min(now - lastFrame, 50); // clamp anti-saut (retour d'onglet)
+      lastFrame = now;
+      uniforms.time.value += dt * 0.00018; // ≈ vitesse d'un +0.003/frame à 60 fps
       renderer.render(scene, camera);
       animId = requestAnimationFrame(renderLoop);
     }
     function startLoop() {
-      if (!running) { running = true; renderLoop(); }
+      if (!running) { running = true; lastFrame = 0; animId = requestAnimationFrame(renderLoop); }
     }
     function stopLoop() {
       if (running) { running = false; cancelAnimationFrame(animId); }
@@ -1919,11 +1926,11 @@
 
     // ── La vague vit UNIQUEMENT sur le hero (effet wow à l'arrivée) ──
     // Elle s'estompe dès qu'on défile, libérant la lecture des autres sections.
+    let winH = window.innerHeight;          // hauteur mise en cache (zéro lecture layout au scroll)
     let fadeTicking = false;
     function updateWaveOpacity() {
-      const h = window.innerHeight;
-      const fadeStart = h * 0.16;   // pleine intensité jusqu'ici
-      const fadeEnd   = h * 0.82;   // totalement effacée ici
+      const fadeStart = winH * 0.16;   // pleine intensité jusqu'ici
+      const fadeEnd   = winH * 0.82;   // totalement effacée ici
       const y = window.scrollY;
       let opacity;
       if (y <= fadeStart) opacity = 1;
@@ -1938,15 +1945,19 @@
     }
     function onWaveScroll() {
       if (!fadeTicking) {
-        requestAnimationFrame(() => { updateWaveOpacity(); fadeTicking = false; });
         fadeTicking = true;
+        requestAnimationFrame(() => { updateWaveOpacity(); fadeTicking = false; });
       }
     }
 
     startLoop();
     updateWaveOpacity();
     window.addEventListener('scroll', onWaveScroll, { passive: true });
-    window.addEventListener('resize', () => { handleResize(); updateWaveOpacity(); }, { passive: true });
+    window.addEventListener('resize', () => {
+      winH = window.innerHeight;
+      handleResize();
+      updateWaveOpacity();
+    }, { passive: true });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stopLoop();
       else updateWaveOpacity(); // ne relance que si la vague doit être visible
@@ -2249,11 +2260,17 @@
   window.addEventListener('resize', measure, { passive: true });
   window.addEventListener('load', measure);
 
-  let scrollTicking = false;
+  let scrollTicking = false, navScrolled = null, qnShown = null;
   function handleScroll() {
     const y = window.scrollY;
-    navEl.classList.toggle('scrolled', y > 24);
-    if (heroSection) quickNav.classList.toggle('show', y > quickThreshold);
+    // Gardes d'état : on n'écrit dans le DOM QUE si l'état change réellement.
+    // À 360 Hz le handler tourne jusqu'à 360×/s ; ceci évite tout recalcul de style inutile.
+    const s = y > 24;
+    if (s !== navScrolled) { navScrolled = s; navEl.classList.toggle('scrolled', s); }
+    if (heroSection) {
+      const sh = y > quickThreshold;
+      if (sh !== qnShown) { qnShown = sh; quickNav.classList.toggle('show', sh); }
+    }
     scrollTicking = false;
   }
   window.addEventListener('scroll', () => {
